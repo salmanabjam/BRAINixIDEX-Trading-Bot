@@ -1,0 +1,49 @@
+# BiX TradeBOT - Python Dependencies
+# ====================================
+
+# Core Trading & Data
+pandas>=2.0.0
+numpy>=1.24.0
+pandas-ta>=0.3.14b
+python-binance>=1.0.19
+ccxt>=4.0.0
+
+# Live Data Feed System
+aiohttp>=3.9.0
+websockets>=12.0
+
+# Backtesting
+backtesting>=0.3.3
+
+# Machine Learning
+scikit-learn>=1.3.0
+lightgbm>=4.0.0
+xgboost>=2.0.0
+optuna>=3.3.0
+
+# Deep Learning (Optional - uncomment if using LSTM)
+# tensorflow>=2.13.0
+# torch>=2.0.0
+
+# Data Visualization
+matplotlib>=3.7.0
+seaborn>=0.12.0
+plotly>=5.15.0
+
+# Utilities
+python-dotenv>=1.0.0
+requests>=2.31.0
+ta-lib>=0.4.28
+
+# Progress bars & CLI
+tqdm>=4.65.0
+colorama>=0.4.6
+
+# Dashboard (Optional - for UI)
+streamlit>=1.25.0
+
+# Development & Testing
+pytest>=7.4.0
+pytest-cov>=4.1.0
+black>=23.7.0
+flake8>=6.1.0
