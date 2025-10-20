@@ -113,10 +113,29 @@ class MLEngine:
         df['signal_lag1'] = df['combined_signal'].shift(1)
         df['signal_lag2'] = df['combined_signal'].shift(2)
 
+        # Store original length
+        original_len = len(df)
+        
         # Drop NaN values created by feature engineering
         df = df.dropna()
+        
+        dropped_rows = original_len - len(df)
+        if dropped_rows > 0:
+            logger.info(
+                f"Dropped {dropped_rows} rows with NaN values "
+                f"during feature engineering"
+            )
 
         logger.info(f"✅ Features engineered. Shape: {df.shape}")
+        
+        # If dataframe is empty after dropna, return None
+        if len(df) == 0:
+            logger.error(
+                "All rows dropped during feature engineering. "
+                "Input data may be insufficient."
+            )
+            return None
+            
         return df
 
     def prepare_training_data(self, df, target_column='future_return'):
@@ -130,16 +149,20 @@ class MLEngine:
         Returns:
             tuple: (X_train, X_test, y_train, y_test)
         """
-        # Create target: future return
+        # Create target: future return with threshold
         # Labels: 0 = Sell/Short, 1 = Hold/Neutral, 2 = Buy/Long
-        df['future_return'] = df['close'].shift(-1) - df['close']
+        # Use percentage change to normalize across different price levels
+        df['future_return_pct'] = (df['close'].shift(-1) - df['close']) / df['close']
         df['target'] = 1  # Default: hold/neutral
 
-        # Buy signal: positive future return (label = 2)
-        df.loc[df['future_return'] > 0, 'target'] = 2
+        # Define threshold as 0.5% of ATR relative to price
+        threshold = 0.005  # 0.5% threshold for signal
 
-        # Sell signal: negative future return (label = 0)
-        df.loc[df['future_return'] < 0, 'target'] = 0
+        # Buy signal: positive future return > threshold (label = 2)
+        df.loc[df['future_return_pct'] > threshold, 'target'] = 2
+
+        # Sell signal: negative future return < -threshold (label = 0)
+        df.loc[df['future_return_pct'] < -threshold, 'target'] = 0
 
         # Drop last row (no future data)
         df = df[:-1]
@@ -319,7 +342,19 @@ class MLEngine:
             return None
 
         df_features = self.engineer_features(df)
+        
+        # Check if features are empty
+        if df_features is None or len(df_features) == 0:
+            logger.error("Empty features dataframe returned")
+            return None
+        
         X = df_features[self.feature_columns]
+        
+        # Check if X is empty
+        if X is None or len(X) == 0:
+            logger.error(f"Empty feature matrix. Features shape: {X.shape if X is not None else 'None'}")
+            return None
+        
         X_scaled = self.scaler.transform(X)
 
         # Get probabilities (model outputs 0, 1, 2)

@@ -76,7 +76,7 @@ class Config:
     SCALER_SAVE_PATH = 'models/scaler.pkl'
     
     # ============= Backtesting =============
-    BACKTEST_START_DATE = '2025-07-01'  # Last 110 days for more training data
+    BACKTEST_START_DATE = '2025-09-10'  # Recent 40 days for latest data
     BACKTEST_END_DATE = '2025-10-20'
     BACKTEST_COMMISSION = 0.001  # 0.1% per trade
     

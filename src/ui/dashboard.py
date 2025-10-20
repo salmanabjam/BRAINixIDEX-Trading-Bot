@@ -15,17 +15,29 @@ import json
 from datetime import datetime
 import sys
 import os
+from pathlib import Path
 
-# Add parent directory to path
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+# Add src directory to path (go up 2 levels from ui/dashboard.py to root, then into src)
+current_dir = Path(__file__).parent  # ui directory
+src_dir = current_dir.parent  # src directory
+root_dir = src_dir.parent  # root directory
+sys.path.insert(0, str(src_dir))
 
 from utils.config import Config
 from data.handler import DataHandler
 from data.indicators import TechnicalIndicators
 from core.ml_engine import MLEngine
-from strategy_backtester import StrategyBacktester
 from core.risk_manager import RiskManager
 from core.strategy import SimpleHybridStrategy
+from utils.logger import get_logger
+
+# Import backtester (optional - may not exist in all versions)
+try:
+    from analysis.backtester import BacktestEngine
+    BACKTESTER_AVAILABLE = True
+except ImportError:
+    BACKTESTER_AVAILABLE = False
+    print("⚠️ Backtester module not available")
 
 # Import live data feed system
 try:
@@ -85,6 +97,8 @@ if 'ml_engine' not in st.session_state:
     st.session_state.ml_engine = None
 if 'risk_manager' not in st.session_state:
     st.session_state.risk_manager = RiskManager()
+if 'logger' not in st.session_state:
+    st.session_state.logger = get_logger()
 
 # Header
 st.markdown('<h1 class="main-header">🤖 BiX TradeBOT</h1>', unsafe_allow_html=True)
@@ -92,14 +106,17 @@ st.markdown('<p class="sub-header">AI-Powered Trading Dashboard | SALMAN ThinkTa
 
 # Sidebar
 with st.sidebar:
-    st.image("https://via.placeholder.com/300x100/667eea/ffffff?text=BiX+TradeBOT", use_container_width=True)
+    st.markdown("## 🤖 BiX TradeBOT")
+    st.markdown("### AI-Powered Trading")
+    st.markdown("---")
     
     st.markdown("### ⚙️ Configuration")
     
     symbol = st.selectbox(
         "Trading Pair",
-        ["BTCUSDT", "ETHUSDT", "BNBUSDT", "ADAUSDT", "DOGEUSDT"],
-        index=0
+        ["BTCUSDT", "ETHUSDT", "BNBUSDT", "SOLUSDT", "XRPUSDT"],
+        index=0,
+        help="Select trading pair (BTCUSDT recommended)"
     )
     
     timeframe = st.selectbox(
@@ -137,12 +154,14 @@ with st.sidebar:
         st.rerun()
 
 # Main content
-tab1, tab2, tab3, tab4, tab5 = st.tabs([
+tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
     "📊 Live Analysis",
     "🌐 Live Market Feed",
     "📈 Backtest",
     "🤖 ML Training",
-    "📋 Settings"
+    "📋 Settings",
+    "🔍 System Logs",
+    "🧪 System Testing"
 ])
 
 # Tab 1: Live Analysis
@@ -152,9 +171,19 @@ with tab1:
     if st.button("▶️ Analyze Market", type="primary"):
         with st.spinner(f"Fetching {symbol} data..."):
             try:
+                # Log analysis start
+                st.session_state.logger.info(
+                    f"Starting market analysis for {symbol} {timeframe}",
+                    component="ANALYSIS"
+                )
+                
                 # Initialize data handler
                 if st.session_state.data_handler is None:
                     st.session_state.data_handler = DataHandler(use_ccxt=False)
+                    st.session_state.logger.info(
+                        "DataHandler initialized",
+                        component="SYSTEM"
+                    )
                 
                 # Update config
                 Config.SYMBOL = symbol
@@ -171,9 +200,56 @@ with tab1:
                     limit=500
                 )
                 
+                # Check if we have data
+                if df is None or len(df) == 0:
+                    error_msg = (
+                        f"No data available for {symbol}. "
+                        "Please try another symbol (BTCUSDT recommended)"
+                    )
+                    st.session_state.logger.error(
+                        error_msg,
+                        component="DATA_HANDLER"
+                    )
+                    st.error(f"❌ {error_msg}")
+                    st.stop()
+                
+                if len(df) < 100:
+                    warning_msg = (
+                        f"Limited data available ({len(df)} candles). "
+                        "Results may be less accurate."
+                    )
+                    st.session_state.logger.warning(
+                        warning_msg,
+                        component="DATA_HANDLER"
+                    )
+                    st.warning(f"⚠️ {warning_msg}")
+                
+                st.session_state.logger.info(
+                    f"Fetched {len(df)} candles successfully",
+                    component="DATA_HANDLER"
+                )
+                
                 # Calculate indicators
                 indicators = TechnicalIndicators(df)
                 df_indicators = indicators.calculate_all()
+                
+                # Check if indicators calculated successfully
+                if df_indicators is None or len(df_indicators) == 0:
+                    error_msg = (
+                        "Failed to calculate technical indicators. "
+                        "Please try again."
+                    )
+                    st.session_state.logger.error(
+                        error_msg,
+                        component="INDICATORS"
+                    )
+                    st.error(f"❌ {error_msg}")
+                    st.stop()
+                
+                st.session_state.logger.info(
+                    "Technical indicators calculated successfully",
+                    component="INDICATORS"
+                )
                 
                 # Get latest signals
                 latest_signals = indicators.get_latest_signals()
@@ -186,13 +262,51 @@ with tab1:
                         st.session_state.ml_engine = MLEngine()
                     
                     if not st.session_state.ml_engine.load_model():
-                        st.warning("⚠️ No trained model found. Train model in ML Training tab.")
-                    else:
-                        predictions = st.session_state.ml_engine.get_prediction_confidence(
-                            df_indicators.tail(1)
+                        st.session_state.logger.warning(
+                            "No trained ML model found",
+                            component="ML_ENGINE"
                         )
-                        ml_pred = predictions['prediction'].iloc[-1]
-                        ml_conf = predictions['confidence'].iloc[-1]
+                        st.warning(
+                            "⚠️ No trained model found. "
+                            "Train model in ML Training tab."
+                        )
+                    else:
+                        try:
+                            # For ML predictions, we need full dataframe
+                            # not just last row, to calculate features
+                            predictions = (
+                                st.session_state.ml_engine
+                                .get_prediction_confidence(df_indicators)
+                            )
+                            
+                            if predictions is not None and len(predictions) > 0:
+                                ml_pred = predictions['prediction'].iloc[-1]
+                                ml_conf = predictions['confidence'].iloc[-1]
+                                
+                                st.session_state.logger.info(
+                                    f"ML prediction: {ml_pred} "
+                                    f"(confidence: {ml_conf:.2%})",
+                                    component="ML_ENGINE"
+                                )
+                            else:
+                                st.session_state.logger.warning(
+                                    "ML predictions returned empty",
+                                    component="ML_ENGINE"
+                                )
+                                st.warning(
+                                    "⚠️ ML predictions unavailable. "
+                                    "Using technical analysis only."
+                                )
+                        except Exception as ml_error:
+                            st.session_state.logger.error(
+                                f"ML prediction failed: {str(ml_error)}",
+                                component="ML_ENGINE",
+                                exception=ml_error
+                            )
+                            st.warning(
+                                f"⚠️ ML Error: {str(ml_error)}. "
+                                "Using technical analysis only."
+                            )
                 
                 # Generate signal
                 strategy = SimpleHybridStrategy(use_ml=enable_ml)
@@ -200,6 +314,11 @@ with tab1:
                     latest_signals,
                     ml_prediction=ml_pred,
                     ml_confidence=ml_conf
+                )
+                
+                st.session_state.logger.info(
+                    f"Signal generated: {signal}",
+                    component="STRATEGY"
                 )
                 
                 st.session_state.latest_data = {
@@ -213,7 +332,15 @@ with tab1:
                 st.success("✅ Analysis complete!")
                 
             except Exception as e:
+                st.session_state.logger.error(
+                    f"Market analysis failed: {str(e)}",
+                    component="ANALYSIS",
+                    exception=e
+                )
                 st.error(f"❌ Error: {str(e)}")
+                st.error(
+                    "Check 'System Logs' tab for detailed error information"
+                )
                 st.stop()
     
     # Display results
@@ -401,119 +528,14 @@ with tab1:
         st.markdown("### 🎯 Strategy Backtest & Performance")
         
         with st.expander("📊 View Backtest Results", expanded=False):
-            if st.button("🔄 Run Backtest on Current Data", type="primary"):
-                with st.spinner("Running backtest..."):
-                    try:
-                        # Get predictions from ML model
-                        if st.session_state.ml_engine and st.session_state.ml_engine.is_trained:
-                            predictions = st.session_state.ml_engine.predict(data['df'])
-                            
-                            # Run backtest
-                            backtester = StrategyBacktester(initial_capital=10000)
-                            backtest_results = backtester.run_backtest(
-                                df=data['df'],
-                                predictions=predictions,
-                                commission=0.001
-                            )
-                            
-                            # Display metrics in columns
-                            col1, col2, col3, col4 = st.columns(4)
-                            
-                            with col1:
-                                st.metric(
-                                    "Total Return",
-                                    f"{backtest_results['total_return']:.2f}%",
-                                    delta=f"${backtest_results['final_capital'] - 10000:,.2f}"
-                                )
-                            
-                            with col2:
-                                st.metric(
-                                    "Win Rate",
-                                    f"{backtest_results['win_rate']:.1f}%",
-                                    delta=f"{backtest_results['winning_trades']}/{backtest_results['total_trades']}"
-                                )
-                            
-                            with col3:
-                                st.metric(
-                                    "Sharpe Ratio",
-                                    f"{backtest_results['sharpe_ratio']:.2f}",
-                                    delta="Risk-adjusted return"
-                                )
-                            
-                            with col4:
-                                st.metric(
-                                    "Max Drawdown",
-                                    f"{backtest_results['max_drawdown']:.2f}%",
-                                    delta="Worst loss"
-                                )
-                            
-                            # Display detailed stats
-                            st.markdown("#### 📈 Detailed Statistics")
-                            
-                            col_a, col_b = st.columns(2)
-                            
-                            with col_a:
-                                stats_df = pd.DataFrame({
-                                    'Metric': [
-                                        'Total Trades',
-                                        'Winning Trades',
-                                        'Losing Trades',
-                                        'Average Win',
-                                        'Average Loss'
-                                    ],
-                                    'Value': [
-                                        backtest_results['total_trades'],
-                                        f"{backtest_results['winning_trades']} ✅",
-                                        f"{backtest_results['losing_trades']} ❌",
-                                        f"{backtest_results['avg_win']:.2f}%",
-                                        f"{backtest_results['avg_loss']:.2f}%"
-                                    ]
-                                })
-                                st.dataframe(stats_df, use_container_width=True, hide_index=True)
-                            
-                            with col_b:
-                                capital_df = pd.DataFrame({
-                                    'Metric': [
-                                        'Initial Capital',
-                                        'Final Capital',
-                                        'Net Profit/Loss',
-                                        'Total Return %',
-                                        'Profit Factor'
-                                    ],
-                                    'Value': [
-                                        f"${10000:,.2f}",
-                                        f"${backtest_results['final_capital']:,.2f}",
-                                        f"${backtest_results['final_capital'] - 10000:,.2f}",
-                                        f"{backtest_results['total_return']:.2f}%",
-                                        f"{abs(backtest_results['avg_win'] / backtest_results['avg_loss']) if backtest_results['avg_loss'] != 0 else 'N/A'}"
-                                    ]
-                                })
-                                st.dataframe(capital_df, use_container_width=True, hide_index=True)
-                            
-                            # Create backtest chart
-                            st.markdown("#### 📊 Backtest Visualization")
-                            backtest_fig = backtester.create_chart(
-                                df=data['df'],
-                                predictions=predictions,
-                                backtest_results=backtest_results,
-                                symbol=symbol
-                            )
-                            st.plotly_chart(backtest_fig, use_container_width=True)
-                            
-                            # Trade history
-                            if len(backtest_results['trades']) > 0:
-                                st.markdown("#### 📋 Trade History")
-                                trades_df = pd.DataFrame(backtest_results['trades'])
-                                trades_df['profit_pct'] = trades_df['profit_pct'].apply(lambda x: f"{x:.2f}%")
-                                trades_df['profit_usd'] = trades_df['profit_usd'].apply(lambda x: f"${x:.2f}")
-                                st.dataframe(trades_df, use_container_width=True, hide_index=True)
-                            
-                            st.success("✅ Backtest complete!")
-                        else:
-                            st.warning("⚠️ Please train ML model first (ML Training tab)")
-                            
-                    except Exception as e:
-                        st.error(f"❌ Backtest failed: {str(e)}")
+            st.info("💡 Use the dedicated **Backtest tab (Tab 3)** for full backtesting capabilities")
+            st.markdown("""
+            **Available Features in Backtest Tab:**
+            - � Custom date range selection
+            - 📊 Comprehensive performance metrics
+            - � Visual charts and trade history
+            - 🎯 Sharpe Ratio and Max Drawdown analysis
+            """)
 
 # Tab 2: Live Market Feed
 with tab2:
@@ -1047,6 +1069,451 @@ AZURE_OPENAI_KEY=your_api_key
         - GitHub Issues
         - Email: support@example.com
         """)
+
+# Tab 6: System Logs & Error Monitoring
+with tab6:
+    st.markdown("### 🔍 System Logs & Error Monitoring")
+    
+    # Real-time status
+    col1, col2, col3, col4 = st.columns(4)
+    
+    logger = st.session_state.logger
+    error_stats = logger.get_error_stats()
+    
+    with col1:
+        st.metric(
+            "Total Errors",
+            error_stats.get('total_errors', 0),
+            delta=None,
+            delta_color="inverse"
+        )
+    
+    with col2:
+        component_count = len(error_stats.get('components', {}))
+        st.metric("Affected Components", component_count)
+    
+    with col3:
+        error_type_count = len(error_stats.get('error_types', {}))
+        st.metric("Error Types", error_type_count)
+    
+    with col4:
+        if error_stats.get('last_error'):
+            try:
+                last_time = datetime.fromisoformat(
+                    error_stats['last_error']['timestamp']
+                )
+                time_ago = (datetime.now() - last_time).seconds
+                st.metric("Last Error", f"{time_ago}s ago")
+            except (KeyError, ValueError):
+                st.metric("Last Error", "Unknown")
+        else:
+            st.metric("Last Error", "None")
+    
+    st.markdown("---")
+    
+    # Tabs for different log views
+    log_tab1, log_tab2, log_tab3, log_tab4 = st.tabs([
+        "🔴 Error History",
+        "📊 Error Statistics",
+        "📝 System Logs",
+        "💰 Trade Logs"
+    ])
+    
+    # Error History Tab
+    with log_tab1:
+        st.markdown("#### Recent Errors")
+        
+        error_limit = st.slider("Show last N errors", 5, 50, 20)
+        recent_errors = logger.get_recent_errors(limit=error_limit)
+        
+        if not recent_errors:
+            st.success("✅ No errors recorded! System running smoothly.")
+        else:
+            for idx, error in enumerate(reversed(recent_errors)):
+                with st.expander(
+                    f"❌ {error['type']} - {error['component']} | "
+                    f"{error['timestamp']}"
+                ):
+                    st.markdown(f"**Message:** {error['message']}")
+                    st.markdown(f"**Component:** `{error['component']}`")
+                    st.markdown(f"**Type:** `{error['type']}`")
+                    st.markdown(f"**Time:** {error['timestamp']}")
+                    
+                    if error.get('traceback'):
+                        st.markdown("**Traceback:**")
+                        st.code(error['traceback'], language='python')
+    
+    # Error Statistics Tab
+    with log_tab2:
+        st.markdown("#### Error Analysis")
+        
+        if error_stats.get('total_errors', 0) == 0:
+            st.info("📊 No errors to analyze yet.")
+        else:
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                st.markdown("**Errors by Type:**")
+                error_types = error_stats.get('error_types', {})
+                if error_types:
+                    type_df = pd.DataFrame([
+                        {"Error Type": k, "Count": v}
+                        for k, v in error_types.items()
+                    ])
+                    st.dataframe(
+                        type_df,
+                        use_container_width=True,
+                        hide_index=True
+                    )
+                else:
+                    st.info("No error types recorded.")
+            
+            with col2:
+                st.markdown("**Errors by Component:**")
+                components = error_stats.get('components', {})
+                if components:
+                    comp_df = pd.DataFrame([
+                        {"Component": k, "Count": v}
+                        for k, v in components.items()
+                    ])
+                    st.dataframe(
+                        comp_df,
+                        use_container_width=True,
+                        hide_index=True
+                    )
+                else:
+                    st.info("No components recorded.")
+            
+            # Error trend chart (if we have timestamps)
+            st.markdown("**Error Timeline:**")
+            recent_errors = logger.get_recent_errors(limit=50)
+            if recent_errors:
+                error_times = [
+                    datetime.fromisoformat(e['timestamp'])
+                    for e in recent_errors
+                ]
+                
+                fig = go.Figure()
+                fig.add_trace(go.Scatter(
+                    x=error_times,
+                    y=list(range(1, len(error_times) + 1)),
+                    mode='lines+markers',
+                    name='Cumulative Errors',
+                    line=dict(color='red', width=2),
+                    marker=dict(size=8)
+                ))
+                
+                fig.update_layout(
+                    title="Error Accumulation Over Time",
+                    xaxis_title="Time",
+                    yaxis_title="Cumulative Error Count",
+                    height=400,
+                    template="plotly_dark"
+                )
+                
+                st.plotly_chart(fig, use_container_width=True)
+    
+    # System Logs Tab
+    with log_tab3:
+        st.markdown("#### System Event Logs")
+        
+        log_file = Path("logs/system.log")
+        if log_file.exists():
+            with open(log_file, 'r', encoding='utf-8') as f:
+                logs = f.readlines()
+            
+            # Show last N lines
+            num_lines = st.slider("Show last N lines", 10, 100, 50)
+            
+            st.code('\n'.join(logs[-num_lines:]), language='log')
+            
+            if st.button("📥 Download System Logs"):
+                st.download_button(
+                    label="Download",
+                    data=''.join(logs),
+                    file_name="system_logs.txt",
+                    mime="text/plain"
+                )
+        else:
+            st.info("📝 No system logs available yet.")
+    
+    # Trade Logs Tab
+    with log_tab4:
+        st.markdown("#### Trade Execution Logs")
+        
+        trade_file = Path("logs/trades.log")
+        if trade_file.exists():
+            trades = []
+            with open(trade_file, 'r', encoding='utf-8') as f:
+                for line in f:
+                    try:
+                        trades.append(json.loads(line.strip()))
+                    except json.JSONDecodeError:
+                        continue
+            
+            if trades:
+                trade_df = pd.DataFrame(trades)
+                
+                # Show summary
+                st.metric("Total Trades", len(trades))
+                
+                # Display table
+                st.dataframe(
+                    trade_df,
+                    use_container_width=True,
+                    hide_index=True
+                )
+                
+                if st.button("📥 Download Trade Logs"):
+                    st.download_button(
+                        label="Download",
+                        data=trade_df.to_csv(index=False),
+                        file_name="trade_logs.csv",
+                        mime="text/csv"
+                    )
+            else:
+                st.info("💰 No trades executed yet.")
+        else:
+            st.info("💰 No trade logs available yet.")
+    
+    st.markdown("---")
+    
+    # Log Management
+    st.markdown("#### 🗑️ Log Management")
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        if st.button("🧹 Clear Old Logs (>7 days)"):
+            logger.clear_old_logs(days=7)
+            st.success("✅ Old logs cleared successfully!")
+    
+    with col2:
+        if st.button("🔄 Refresh Error Stats"):
+            st.rerun()
+
+# Tab 7: System Testing & Simulation
+with tab7:
+    st.markdown("### 🧪 System Testing & Simulation")
+    st.markdown("Comprehensive testing of all bot components")
+    
+    col1, col2 = st.columns([2, 1])
+    
+    with col1:
+        if st.button("▶️ Run All Tests", type="primary", use_container_width=True):
+            from utils.system_simulator import SystemSimulator
+            
+            with st.spinner("Running comprehensive system tests..."):
+                simulator = SystemSimulator()
+                results = simulator.run_all_tests()
+                
+                # Store in session state
+                st.session_state['test_results'] = results
+                
+                st.success("✅ Tests completed!")
+                st.rerun()
+    
+    with col2:
+        if st.button("📥 Download Report", use_container_width=True):
+            if 'test_results' in st.session_state:
+                from utils.system_simulator import SystemSimulator
+                simulator = SystemSimulator()
+                report = simulator.generate_report(
+                    st.session_state['test_results']
+                )
+                
+                st.download_button(
+                    label="Download TXT Report",
+                    data=report,
+                    file_name=f"system_test_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt",
+                    mime="text/plain"
+                )
+            else:
+                st.warning("Run tests first!")
+    
+    st.markdown("---")
+    
+    # Display results if available
+    if 'test_results' in st.session_state:
+        results = st.session_state['test_results']
+        summary = results['summary']
+        
+        # Summary Metrics
+        st.markdown("#### 📊 Test Summary")
+        col1, col2, col3, col4, col5 = st.columns(5)
+        
+        with col1:
+            st.metric("Total Tests", summary['total_tests'])
+        
+        with col2:
+            st.metric("✅ Passed", summary['passed'], 
+                     delta=f"{summary['success_rate']:.1f}%")
+        
+        with col3:
+            st.metric("❌ Failed", summary['failed'],
+                     delta=None if summary['failed'] == 0 else f"-{summary['failed']}",
+                     delta_color="inverse")
+        
+        with col4:
+            st.metric("⚠️ Warnings", summary['warnings'])
+        
+        with col5:
+            st.metric("⏱️ Duration", f"{summary['total_duration']:.2f}s")
+        
+        # Progress bar
+        if summary['total_tests'] > 0:
+            progress = summary['passed'] / summary['total_tests']
+            st.progress(progress)
+        
+        st.markdown("---")
+        
+        # Individual test results
+        st.markdown("#### 🔍 Detailed Results")
+        
+        for test in results['tests']:
+            # Status badge
+            status_colors = {
+                'PASS': '🟢',
+                'FAIL': '🔴',
+                'WARN': '🟡',
+                'SKIP': '⚪'
+            }
+            
+            status_icon = status_colors.get(test['status'], '❓')
+            
+            with st.expander(
+                f"{status_icon} {test['name']} - {test['status']} "
+                f"({test['duration']:.2f}s)"
+            ):
+                st.markdown(f"**Message:** {test['message']}")
+                
+                if test['details']:
+                    st.markdown("**Details:**")
+                    
+                    # Convert details to dataframe if possible
+                    details_items = []
+                    for key, value in test['details'].items():
+                        if isinstance(value, dict):
+                            # Nested dict - expand
+                            for k, v in value.items():
+                                details_items.append({
+                                    'Property': f"{key}.{k}",
+                                    'Value': str(v)
+                                })
+                        elif isinstance(value, list):
+                            details_items.append({
+                                'Property': key,
+                                'Value': ', '.join(str(v) for v in value[:3]) + 
+                                        (f' (+{len(value)-3} more)' if len(value) > 3 else '')
+                            })
+                        else:
+                            details_items.append({
+                                'Property': key,
+                                'Value': str(value)
+                            })
+                    
+                    if details_items:
+                        details_df = pd.DataFrame(details_items)
+                        st.dataframe(
+                            details_df,
+                            use_container_width=True,
+                            hide_index=True
+                        )
+        
+        st.markdown("---")
+        
+        # Test coverage visualization
+        st.markdown("#### 📈 Test Coverage")
+        
+        test_names = [t['name'] for t in results['tests']]
+        test_statuses = [t['status'] for t in results['tests']]
+        test_durations = [t['duration'] for t in results['tests']]
+        
+        # Status distribution pie chart
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            status_counts = pd.DataFrame({
+                'Status': test_statuses
+            })['Status'].value_counts()
+            
+            fig_pie = go.Figure(data=[go.Pie(
+                labels=status_counts.index,
+                values=status_counts.values,
+                hole=0.3,
+                marker=dict(colors=['green', 'red', 'yellow', 'gray'])
+            )])
+            
+            fig_pie.update_layout(
+                title="Test Status Distribution",
+                height=300
+            )
+            
+            st.plotly_chart(fig_pie, use_container_width=True)
+        
+        with col2:
+            # Duration bar chart
+            fig_bar = go.Figure(data=[go.Bar(
+                x=test_names,
+                y=test_durations,
+                marker_color='lightblue'
+            )])
+            
+            fig_bar.update_layout(
+                title="Test Duration (seconds)",
+                xaxis_title="Test Name",
+                yaxis_title="Duration (s)",
+                height=300,
+                xaxis_tickangle=-45
+            )
+            
+            st.plotly_chart(fig_bar, use_container_width=True)
+        
+        # Component health status
+        st.markdown("#### 🏥 Component Health Status")
+        
+        component_status = []
+        for test in results['tests']:
+            health_score = 100 if test['status'] == 'PASS' else (
+                50 if test['status'] == 'WARN' else 
+                25 if test['status'] == 'SKIP' else 0
+            )
+            
+            component_status.append({
+                'Component': test['name'],
+                'Status': test['status'],
+                'Health': health_score,
+                'Duration': f"{test['duration']:.2f}s",
+                'Message': test['message'][:50] + '...' if len(test['message']) > 50 else test['message']
+            })
+        
+        status_df = pd.DataFrame(component_status)
+        
+        # Display without styling (simpler approach)
+        st.dataframe(status_df, use_container_width=True, hide_index=True)
+        
+    else:
+        # No results yet
+        st.info("👆 Click 'Run All Tests' to start system diagnostics")
+        
+        st.markdown("#### 🎯 What Will Be Tested:")
+        
+        test_info = [
+            ("📊 DataHandler", "Market data fetching, caching, API connectivity"),
+            ("📈 Technical Indicators", "EMA, RSI, ATR, ADX calculations"),
+            ("🤖 ML Engine", "Model loading, predictions, confidence scores"),
+            ("💰 Risk Manager", "Position sizing, risk calculations"),
+            ("🎯 Trading Strategy", "Signal generation, decision logic"),
+            ("⚙️ Configuration", "Config loading, parameter validation"),
+            ("📝 Logger System", "Log files, error tracking"),
+            ("💾 Cache System", "Cache files, data persistence")
+        ]
+        
+        for name, desc in test_info:
+            with st.expander(name):
+                st.markdown(f"**Tests:** {desc}")
+                st.markdown("**Purpose:** Ensure component is working correctly")
+                st.markdown("**Expected:** PASS status")
 
 # Footer
 st.markdown("---")

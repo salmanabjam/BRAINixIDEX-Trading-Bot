@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BiX TradeBOT - Live Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #fff;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 3em;
+            background: linear-gradient(45deg, #00f260, #0575e6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 8px 20px;
+            background: rgba(0, 255, 0, 0.2);
+            border: 2px solid #00ff00;
+            border-radius: 20px;
+            font-size: 0.9em;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 242, 96, 0.3);
+        }
+
+        .card-title {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            color: #00f260;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .price-display {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #fff;
+            margin: 15px 0;
+        }
+
+        .price-change {
+            font-size: 1.2em;
+            padding: 5px 15px;
+            border-radius: 10px;
+            display: inline-block;
+        }
+
+        .positive {
+            background: rgba(0, 255, 0, 0.2);
+            color: #00ff00;
+        }
+
+        .negative {
+            background: rgba(255, 0, 0, 0.2);
+            color: #ff0000;
+        }
+
+        .indicator {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            margin: 8px 0;
+        }
+
+        .indicator-label {
+            color: #aaa;
+        }
+
+        .indicator-value {
+            font-weight: bold;
+            color: #00f260;
+        }
+
+        .signal-box {
+            text-align: center;
+            padding: 30px;
+            border-radius: 15px;
+            font-size: 2em;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .signal-buy {
+            background: linear-gradient(135deg, #00f260, #0575e6);
+        }
+
+        .signal-sell {
+            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+        }
+
+        .signal-hold {
+            background: linear-gradient(135deg, #f7971e, #ffd200);
+            color: #000;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            flex: 1;
+            min-width: 150px;
+            padding: 15px 30px;
+            font-size: 1em;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #00f260, #0575e6);
+            color: #fff;
+        }
+
+        .btn-danger {
+            background: linear-gradient(45deg, #ff416c, #ff4b2b);
+            color: #fff;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 242, 96, 0.4);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2em;
+            color: #00f260;
+        }
+
+        .timestamp {
+            text-align: center;
+            color: #888;
+            margin-top: 30px;
+            font-size: 0.9em;
+        }
+
+        .crypto-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .crypto-item {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .crypto-symbol {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #00f260;
+            margin-bottom: 10px;
+        }
+
+        .crypto-price {
+            font-size: 1.5em;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 BiX TradeBOT</h1>
+            <p style="font-size: 1.2em; margin: 10px 0;">AI-Powered Crypto Trading Dashboard</p>
+            <span class="status" id="status">● LIVE</span>
+        </header>
+
+        <div class="dashboard">
+            <!-- Price Card -->
+            <div class="card">
+                <div class="card-title">💰 Bitcoin Price</div>
+                <div class="price-display" id="btc-price">Loading...</div>
+                <div class="price-change positive" id="price-change">+0.00%</div>
+                <div style="margin-top: 15px; color: #888; font-size: 0.9em;" id="timestamp">
+                    Last updated: --
+                </div>
+            </div>
+
+            <!-- Technical Indicators -->
+            <div class="card">
+                <div class="card-title">📈 Technical Indicators</div>
+                <div class="indicator">
+                    <span class="indicator-label">EMA Fast (50)</span>
+                    <span class="indicator-value" id="ema-fast">--</span>
+                </div>
+                <div class="indicator">
+                    <span class="indicator-label">EMA Slow (200)</span>
+                    <span class="indicator-value" id="ema-slow">--</span>
+                </div>
+                <div class="indicator">
+                    <span class="indicator-label">RSI</span>
+                    <span class="indicator-value" id="rsi">--</span>
+                </div>
+                <div class="indicator">
+                    <span class="indicator-label">ATR</span>
+                    <span class="indicator-value" id="atr">--</span>
+                </div>
+                <div class="indicator">
+                    <span class="indicator-label">ADX</span>
+                    <span class="indicator-value" id="adx">--</span>
+                </div>
+            </div>
+
+            <!-- ML Prediction -->
+            <div class="card">
+                <div class="card-title">🤖 AI Prediction</div>
+                <div class="indicator">
+                    <span class="indicator-label">Model Accuracy</span>
+                    <span class="indicator-value">91.87%</span>
+                </div>
+                <div class="indicator">
+                    <span class="indicator-label">Signal</span>
+                    <span class="indicator-value" id="ml-signal">--</span>
+                </div>
+                <div class="indicator">
+                    <span class="indicator-label">Confidence</span>
+                    <span class="indicator-value" id="ml-confidence">--</span>
+                </div>
+                <div class="signal-box signal-hold" id="recommendation">
+                    ⚪ HOLD
+                </div>
+            </div>
+
+            <!-- Other Cryptos -->
+            <div class="card">
+                <div class="card-title">💎 Top Cryptocurrencies</div>
+                <div class="crypto-list" id="crypto-list">
+                    <div class="loading">Loading prices...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="card">
+            <div class="card-title">⚙️ Bot Controls</div>
+            <div class="controls">
+                <button class="btn-primary" onclick="startBot()">▶️ Start Trading</button>
+                <button class="btn-danger" onclick="stopBot()">⏹️ Stop Trading</button>
+                <button class="btn-secondary" onclick="refreshData()">🔄 Refresh Data</button>
+                <button class="btn-secondary" onclick="window.open('http://localhost:5000/health', '_blank')">
+                    📊 API Health
+                </button>
+            </div>
+        </div>
+
+        <div class="timestamp">
+            Powered by BiX TradeBOT v1.0 | SALMAN ThinkTank AI Core
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:5000';
+
+        // Format number with commas
+        function formatPrice(price) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(price);
+        }
+
+        // Fetch live price
+        async function fetchPrice() {
+            try {
+                const response = await fetch(`${API_BASE}/api/market/price/BTCUSDT`);
+                const data = await response.json();
+                
+                if (data.price) {
+                    document.getElementById('btc-price').textContent = formatPrice(data.price);
+                    document.getElementById('timestamp').textContent = 
+                        `Last updated: ${new Date().toLocaleString()}`;
+                }
+            } catch (error) {
+                console.error('Error fetching price:', error);
+                document.getElementById('btc-price').textContent = 'Error loading';
+            }
+        }
+
+        // Fetch indicators
+        async function fetchIndicators() {
+            try {
+                const response = await fetch(`${API_BASE}/api/market/indicators/BTCUSDT?timeframe=1h`);
+                const data = await response.json();
+                
+                if (data.indicators) {
+                    const ind = data.indicators;
+                    document.getElementById('ema-fast').textContent = formatPrice(ind.ema_fast || 0);
+                    document.getElementById('ema-slow').textContent = formatPrice(ind.ema_slow || 0);
+                    document.getElementById('rsi').textContent = (ind.rsi || 0).toFixed(2);
+                    document.getElementById('atr').textContent = formatPrice(ind.atr || 0);
+                    document.getElementById('adx').textContent = (ind.adx || 0).toFixed(2);
+                }
+            } catch (error) {
+                console.error('Error fetching indicators:', error);
+            }
+        }
+
+        // Fetch signals
+        async function fetchSignals() {
+            try {
+                const response = await fetch(`${API_BASE}/api/analysis/signals/BTCUSDT?timeframe=1h`);
+                const data = await response.json();
+                
+                if (data.ml_prediction) {
+                    const ml = data.ml_prediction;
+                    document.getElementById('ml-signal').textContent = ml.signal || 'NEUTRAL';
+                    document.getElementById('ml-confidence').textContent = 
+                        `${(ml.confidence * 100).toFixed(2)}%`;
+                }
+
+                if (data.recommendation) {
+                    const rec = data.recommendation;
+                    const recBox = document.getElementById('recommendation');
+                    recBox.textContent = `${rec.action}`;
+                    
+                    recBox.className = 'signal-box';
+                    if (rec.action === 'BUY') recBox.className += ' signal-buy';
+                    else if (rec.action === 'SELL') recBox.className += ' signal-sell';
+                    else recBox.className += ' signal-hold';
+                }
+            } catch (error) {
+                console.error('Error fetching signals:', error);
+            }
+        }
+
+        // Fetch multiple crypto prices
+        async function fetchCryptoList() {
+            const symbols = ['BTCUSDT', 'ETHUSDT', 'BNBUSDT', 'SOLUSDT', 'XRPUSDT'];
+            const container = document.getElementById('crypto-list');
+            container.innerHTML = '';
+
+            for (const symbol of symbols) {
+                try {
+                    const response = await fetch(`${API_BASE}/api/market/price/${symbol}`);
+                    const data = await response.json();
+                    
+                    const item = document.createElement('div');
+                    item.className = 'crypto-item';
+                    item.innerHTML = `
+                        <div class="crypto-symbol">${symbol.replace('USDT', '')}</div>
+                        <div class="crypto-price">${formatPrice(data.price)}</div>
+                    `;
+                    container.appendChild(item);
+                } catch (error) {
+                    console.error(`Error fetching ${symbol}:`, error);
+                }
+            }
+        }
+
+        // Refresh all data
+        function refreshData() {
+            fetchPrice();
+            fetchIndicators();
+            fetchSignals();
+            fetchCryptoList();
+        }
+
+        // Bot controls
+        async function startBot() {
+            try {
+                const response = await fetch(`${API_BASE}/api/trading/start`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const data = await response.json();
+                alert(data.message || 'Bot started!');
+            } catch (error) {
+                alert('Error starting bot: ' + error.message);
+            }
+        }
+
+        async function stopBot() {
+            try {
+                const response = await fetch(`${API_BASE}/api/trading/stop`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const data = await response.json();
+                alert(data.message || 'Bot stopped!');
+            } catch (error) {
+                alert('Error stopping bot: ' + error.message);
+            }
+        }
+
+        // Auto-refresh every 10 seconds
+        setInterval(refreshData, 10000);
+
+        // Initial load
+        refreshData();
+    </script>
+</body>
+</html>
