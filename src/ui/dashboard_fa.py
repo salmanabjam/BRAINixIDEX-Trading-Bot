@@ -34,7 +34,7 @@ from analysis.advanced_chart import AdvancedChartAnalysis
 
 # Import optional modules
 try:
-    from analysis.backtester import BacktestEngine
+    from analysis.backtester import StrategyBacktester
     BACKTESTER_AVAILABLE = True
 except ImportError:
     BACKTESTER_AVAILABLE = False
