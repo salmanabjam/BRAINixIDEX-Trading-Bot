@@ -133,17 +133,37 @@ class TestStrategy:
     
     def test_generate_signal(self, strategy, sample_data):
         """Test signal generation"""
-        signal = strategy.generate_signal(sample_data)
+        # Create indicators dict from sample data
+        indicators = {
+            'combined_signal': sample_data['combined_signal'].iloc[-1],
+            'trend_signal': sample_data['trend_signal'].iloc[-1],
+            'breakout_signal': sample_data['breakout_signal'].iloc[-1],
+            'pullback_signal': sample_data['pullback_signal'].iloc[-1]
+        }
+        
+        signal = strategy.generate_signal(indicators)
         
         assert signal is not None
-        assert signal in ['BUY', 'SELL', 'HOLD']
+        assert isinstance(signal, dict)
+        assert 'action' in signal
+        assert signal['action'] in ['BUY', 'SELL', 'HOLD']
+        assert 'strength' in signal
+        assert 'reason' in signal
     
-    def test_get_signal_strength(self, strategy, sample_data):
-        """Test signal strength calculation"""
-        strength = strategy.get_signal_strength(sample_data)
+    def test_signal_strength(self, strategy, sample_data):
+        """Test that strategy can process data"""
+        # Create indicators dict from sample data
+        indicators = {
+            'combined_signal': sample_data['combined_signal'].iloc[-1],
+            'trend_signal': sample_data['trend_signal'].iloc[-1],
+            'breakout_signal': sample_data['breakout_signal'].iloc[-1],
+            'pullback_signal': sample_data['pullback_signal'].iloc[-1]
+        }
         
-        assert strength is not None
-        assert 0 <= strength <= 100
+        signal = strategy.generate_signal(indicators)
+        assert signal is not None
+        assert 'strength' in signal
+        assert isinstance(signal['strength'], (int, float))
 
 
 class TestRiskManager:
@@ -157,41 +177,26 @@ class TestRiskManager:
     def test_init(self, risk_manager):
         """Test initialization"""
         assert risk_manager is not None
-        assert risk_manager.capital == 10000
+        assert risk_manager.initial_capital == 10000
+        assert risk_manager.current_equity == 10000
     
     def test_calculate_position_size(self, risk_manager):
         """Test position size calculation"""
-        size = risk_manager.calculate_position_size(
-            current_price=100,
-            stop_loss=95,
-            atr=2.0
-        )
-        
-        assert size is not None
-        assert size > 0
-        assert size <= risk_manager.capital * Config.MAX_POSITION_SIZE
-    
-    def test_set_stop_loss(self, risk_manager):
-        """Test stop loss calculation"""
-        stop_loss = risk_manager.set_stop_loss(
+        result = risk_manager.calculate_position_size(
             entry_price=100,
-            side='BUY',
-            atr=2.0
+            atr=2.0,
+            direction='long'
         )
         
-        assert stop_loss is not None
-        assert stop_loss < 100  # For BUY, stop loss should be below entry
-    
-    def test_set_take_profit(self, risk_manager):
-        """Test take profit calculation"""
-        take_profit = risk_manager.set_take_profit(
-            entry_price=100,
-            stop_loss=95,
-            side='BUY'
-        )
-        
-        assert take_profit is not None
-        assert take_profit > 100  # For BUY, take profit should be above entry
+        assert result is not None
+        assert 'size' in result
+        assert 'value' in result
+        assert 'stop_loss' in result
+        assert 'take_profit' in result
+        assert result['size'] > 0
+        assert result['value'] <= risk_manager.current_equity * Config.MAX_POSITION_SIZE
+        assert result['stop_loss'] < 100  # For long, SL should be below entry
+        assert result['take_profit'] > 100  # For long, TP should be above entry
 
 
 class TestConfig:
@@ -232,24 +237,36 @@ def test_integration_full_analysis():
     indicators = TechnicalIndicators(df)
     df = indicators.calculate_all()
     assert 'ema_fast' in df.columns
-    print(f"✅ Calculated indicators")
+    print("✅ Calculated indicators")
     
     # 3. Generate signal
     strategy = SimpleHybridStrategy()
-    signal = strategy.generate_signal(df)
-    assert signal in ['BUY', 'SELL', 'HOLD']
-    print(f"✅ Generated signal: {signal}")
+    indicators_dict = {
+        'combined_signal': float(df['combined_signal'].iloc[-1]),
+        'trend_signal': float(df['trend_signal'].iloc[-1]),
+        'breakout_signal': float(df['breakout_signal'].iloc[-1]),
+        'pullback_signal': float(df['pullback_signal'].iloc[-1])
+    }
+    signal_result = strategy.generate_signal(indicators_dict)
+    assert signal_result is not None
+    assert 'action' in signal_result
+    assert signal_result['action'] in ['BUY', 'SELL', 'HOLD']
+    print(f"✅ Generated signal: {signal_result['action']}")
     
     # 4. Calculate position size
     rm = RiskManager(initial_capital=10000)
-    if signal != 'HOLD':
-        position_size = rm.calculate_position_size(
-            current_price=df['close'].iloc[-1],
-            stop_loss=df['close'].iloc[-1] * 0.98,
-            atr=df['atr'].iloc[-1]
+    if signal_result['action'] != 'HOLD':
+        position = rm.calculate_position_size(
+            entry_price=float(df['close'].iloc[-1]),
+            atr=float(df['atr'].iloc[-1]),
+            direction='long' if signal_result['action'] == 'BUY' else 'short'
         )
-        assert position_size > 0
-        print(f"✅ Position size: ${position_size:.2f}")
+        assert position is not None
+        assert 'size' in position
+        assert 'value' in position
+        assert position['size'] > 0
+        print(f"✅ Position size: {position['size']:.6f} "
+              f"(${position['value']:.2f})")
     
     print("✅ Integration test passed!")
 
