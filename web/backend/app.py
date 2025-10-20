@@ -6,7 +6,10 @@ RESTful API + WebSocket for real-time trading dashboard.
 
 import sys
 from pathlib import Path
-sys.path.insert(0, str(Path(__file__).parent.parent / 'src'))
+
+# Add src directory to path (2 levels up from web/backend/app.py)
+root_dir = Path(__file__).parent.parent.parent
+sys.path.insert(0, str(root_dir / 'src'))
 
 from flask import Flask, jsonify, request
 from flask_cors import CORS
