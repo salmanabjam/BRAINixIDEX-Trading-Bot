@@ -4,6 +4,12 @@ Update Market Data Cache
 Fetch latest market data and update cache.
 """
 
+import sys
+from pathlib import Path
+
+# Add src to path
+sys.path.insert(0, str(Path(__file__).parent.parent / 'src'))
+
 from data.handler import DataHandler
 from colorama import init, Fore, Style
 from datetime import datetime
