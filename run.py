@@ -40,11 +40,13 @@ def print_banner():
 
 def cmd_analyze(args):
     """Run live market analysis"""
-    from core.bot import TradingBot
-    
-    print(f"\n{Fore.YELLOW}📡 Starting Live Analysis...{Style.RESET_ALL}\n")
-    bot = TradingBot(symbol=args.symbol, timeframe=args.timeframe)
-    bot.analyze()
+    # Use the old main.py directly for now
+    import subprocess
+    result = subprocess.run(
+        ['python', 'main.py', 'analyze', '--symbol', args.symbol, '--timeframe', args.timeframe],
+        cwd=Path(__file__).parent
+    )
+    sys.exit(result.returncode)
 
 
 def cmd_backtest(args):

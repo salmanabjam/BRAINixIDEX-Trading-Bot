@@ -13,13 +13,16 @@ from pathlib import Path
 from datetime import datetime
 import argparse
 
-from config import Config
-from data_handler import DataHandler
-from indicators import TechnicalIndicators
-from ml_engine import MLEngine
-from strategy import SimpleHybridStrategy
-from risk_manager import RiskManager
-from backtest import BacktestEngine
+# Add src to path
+sys.path.insert(0, str(Path(__file__).parent / 'src'))
+
+from utils.config import Config
+from data.handler import DataHandler
+from data.indicators import TechnicalIndicators
+from core.ml_engine import MLEngine
+from core.strategy import SimpleHybridStrategy
+from core.risk_manager import RiskManager
+from analysis.backtest import BacktestEngine
 
 # Setup logging
 log_file = f"logs/bix_tradebot_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
