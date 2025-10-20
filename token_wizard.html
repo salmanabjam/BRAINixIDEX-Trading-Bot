@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔑 راهنمای تولید توکن - BRAINixIDEX</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .progress {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .progress::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            right: 50px;
+            left: 50px;
+            height: 4px;
+            background: #e0e0e0;
+            z-index: 0;
+        }
+        
+        .step {
+            text-align: center;
+            flex: 1;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            transition: all 0.3s;
+        }
+        
+        .step.active .step-circle {
+            background: #667eea;
+            transform: scale(1.2);
+        }
+        
+        .step.completed .step-circle {
+            background: #48bb78;
+        }
+        
+        .service-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .service-card:hover {
+            border-color: #667eea;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+        }
+        
+        .service-card.completed {
+            border-color: #48bb78;
+            background: #f0fff4;
+        }
+        
+        .service-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .service-title {
+            font-size: 1.5em;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        
+        .badge.free {
+            background: #48bb78;
+            color: white;
+        }
+        
+        .badge.paid {
+            background: #f6ad55;
+            color: white;
+        }
+        
+        .priority {
+            color: #f6ad55;
+        }
+        
+        .service-info {
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+        
+        .link-box {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            direction: ltr;
+            text-align: left;
+        }
+        
+        .link-box a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+            word-break: break-all;
+        }
+        
+        .link-box a:hover {
+            text-decoration: underline;
+        }
+        
+        .instructions {
+            background: #edf2f7;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+        
+        .instructions ol {
+            margin-right: 20px;
+            line-height: 2;
+        }
+        
+        .token-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            margin: 10px 0;
+            font-family: monospace;
+            direction: ltr;
+            text-align: left;
+        }
+        
+        .token-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 5px;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: scale(1.05);
+        }
+        
+        .btn-success {
+            background: #48bb78;
+            color: white;
+        }
+        
+        .btn-copy {
+            background: #4299e1;
+            color: white;
+        }
+        
+        .status-box {
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            display: none;
+        }
+        
+        .status-box.success {
+            background: #c6f6d5;
+            color: #22543d;
+            display: block;
+        }
+        
+        .status-box.error {
+            background: #fed7d7;
+            color: #742a2a;
+            display: block;
+        }
+        
+        .summary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .summary h2 {
+            margin-bottom: 20px;
+        }
+        
+        .token-list {
+            text-align: right;
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .token-item {
+            padding: 10px;
+            margin: 5px 0;
+            background: rgba(255,255,255,0.1);
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .checkmark {
+            color: #48bb78;
+            font-size: 1.5em;
+            display: none;
+        }
+        
+        .checkmark.show {
+            display: inline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔑 راهنمای تولید توکن‌های AI</h1>
+        <p class="subtitle">برای: @salmanabjam | پروژه: BRAINixIDEX Trading Bot</p>
+        
+        <div class="progress">
+            <div class="step active">
+                <div class="step-circle">1</div>
+                <div>GitHub</div>
+            </div>
+            <div class="step">
+                <div class="step-circle">2</div>
+                <div>Gemini</div>
+            </div>
+            <div class="step">
+                <div class="step-circle">3</div>
+                <div>HuggingFace</div>
+            </div>
+            <div class="step">
+                <div class="step-circle">4</div>
+                <div>OpenAI</div>
+            </div>
+            <div class="step">
+                <div class="step-circle">5</div>
+                <div>Claude</div>
+            </div>
+        </div>
+        
+        <!-- GitHub -->
+        <div class="service-card" id="github-card">
+            <div class="service-header">
+                <div class="service-title">
+                    <span>🐙</span>
+                    <span>GitHub Models</span>
+                    <span class="priority">⭐⭐⭐⭐⭐</span>
+                </div>
+                <span class="badge free">رایگان</span>
+            </div>
+            
+            <div class="service-info">
+                <strong>مزایا:</strong> 5 مدل AI قدرتمند، 15,000 درخواست/روز، بدون نیاز به شماره تلفن
+                <br>
+                <strong>زمان:</strong> 5 دقیقه
+            </div>
+            
+            <div class="link-box">
+                <strong>لینک مستقیم:</strong><br>
+                <a href="https://github.com/settings/tokens/new" target="_blank">
+                    https://github.com/settings/tokens/new
+                </a>
+            </div>
+            
+            <div class="instructions">
+                <strong>مراحل:</strong>
+                <ol>
+                    <li>لینک بالا را باز کنید</li>
+                    <li>Note: <code>BRAINixIDEX-Trading-Bot</code></li>
+                    <li>Expiration: <code>No expiration</code></li>
+                    <li>تیک بزنید: repo, read:packages, write:packages</li>
+                    <li>دکمه Generate token کلیک کنید</li>
+                    <li>توکن را در باکس زیر وارد کنید</li>
+                </ol>
+            </div>
+            
+            <input type="text" class="token-input" id="github-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+            <button class="btn btn-primary" onclick="copyCommand('github')">📋 کپی دستور PowerShell</button>
+            <button class="btn btn-success" onclick="markComplete('github')">✅ انجام شد</button>
+            
+            <div class="status-box" id="github-status"></div>
+        </div>
+        
+        <!-- Google Gemini -->
+        <div class="service-card" id="gemini-card">
+            <div class="service-header">
+                <div class="service-title">
+                    <span>🧠</span>
+                    <span>Google Gemini</span>
+                    <span class="priority">⭐⭐⭐⭐⭐</span>
+                </div>
+                <span class="badge free">رایگان</span>
+            </div>
+            
+            <div class="service-info">
+                <strong>مزایا:</strong> کاملاً رایگان، 60 درخواست/دقیقه، سریع و دقیق
+                <br>
+                <strong>زمان:</strong> 3 دقیقه
+            </div>
+            
+            <div class="link-box">
+                <strong>لینک مستقیم:</strong><br>
+                <a href="https://aistudio.google.com/app/apikey" target="_blank">
+                    https://aistudio.google.com/app/apikey
+                </a>
+            </div>
+            
+            <div class="instructions">
+                <strong>مراحل:</strong>
+                <ol>
+                    <li>لینک بالا را باز کنید</li>
+                    <li>با Google Account login کنید</li>
+                    <li>دکمه Create API Key کلیک کنید</li>
+                    <li>Create API key in new project انتخاب کنید</li>
+                    <li>API key را در باکس زیر وارد کنید</li>
+                </ol>
+            </div>
+            
+            <input type="text" class="token-input" id="gemini-token" placeholder="AIzaSy...">
+            <button class="btn btn-primary" onclick="copyCommand('gemini')">📋 کپی دستور PowerShell</button>
+            <button class="btn btn-success" onclick="markComplete('gemini')">✅ انجام شد</button>
+            
+            <div class="status-box" id="gemini-status"></div>
+        </div>
+        
+        <!-- Hugging Face -->
+        <div class="service-card" id="huggingface-card">
+            <div class="service-header">
+                <div class="service-title">
+                    <span>🤗</span>
+                    <span>Hugging Face</span>
+                    <span class="priority">⭐⭐⭐⭐</span>
+                </div>
+                <span class="badge free">رایگان</span>
+            </div>
+            
+            <div class="service-info">
+                <strong>مزایا:</strong> رایگان کامل، دسترسی به هزاران مدل، بدون نیاز به شماره
+                <br>
+                <strong>زمان:</strong> 2 دقیقه
+            </div>
+            
+            <div class="link-box">
+                <strong>لینک‌ها:</strong><br>
+                ثبت‌نام: <a href="https://huggingface.co/join" target="_blank">huggingface.co/join</a><br>
+                Token: <a href="https://huggingface.co/settings/tokens" target="_blank">huggingface.co/settings/tokens</a>
+            </div>
+            
+            <div class="instructions">
+                <strong>مراحل:</strong>
+                <ol>
+                    <li>ثبت‌نام کنید (اگر ندارید)</li>
+                    <li>به لینک Token بروید</li>
+                    <li>دکمه New token کلیک کنید</li>
+                    <li>Name: BRAINixIDEX-Bot</li>
+                    <li>Role: read</li>
+                    <li>Token را در باکس زیر وارد کنید</li>
+                </ol>
+            </div>
+            
+            <input type="text" class="token-input" id="huggingface-token" placeholder="hf_...">
+            <button class="btn btn-primary" onclick="copyCommand('huggingface')">📋 کپی دستور PowerShell</button>
+            <button class="btn btn-success" onclick="markComplete('huggingface')">✅ انجام شد</button>
+            
+            <div class="status-box" id="huggingface-status"></div>
+        </div>
+        
+        <!-- OpenAI -->
+        <div class="service-card" id="openai-card">
+            <div class="service-header">
+                <div class="service-title">
+                    <span>💬</span>
+                    <span>OpenAI</span>
+                    <span class="priority">⭐⭐⭐</span>
+                </div>
+                <span class="badge paid">5$ رایگان</span>
+            </div>
+            
+            <div class="service-info">
+                <strong>مزایا:</strong> GPT-4o-mini قدرتمند، 5$ اعتبار رایگان
+                <br>
+                <strong>نکته:</strong> نیاز به تایید شماره تلفن
+                <br>
+                <strong>زمان:</strong> 7 دقیقه
+            </div>
+            
+            <div class="link-box">
+                <strong>لینک‌ها:</strong><br>
+                ثبت‌نام: <a href="https://platform.openai.com/signup" target="_blank">platform.openai.com/signup</a><br>
+                API Keys: <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com/api-keys</a>
+            </div>
+            
+            <div class="instructions">
+                <strong>مراحل:</strong>
+                <ol>
+                    <li>ثبت‌نام کنید</li>
+                    <li>ایمیل و شماره تلفن را تایید کنید</li>
+                    <li>به API Keys بروید</li>
+                    <li>Create new secret key کلیک کنید</li>
+                    <li>Name: BRAINixIDEX-Bot</li>
+                    <li>API key را در باکس زیر وارد کنید</li>
+                </ol>
+            </div>
+            
+            <input type="text" class="token-input" id="openai-token" placeholder="sk-proj-...">
+            <button class="btn btn-primary" onclick="copyCommand('openai')">📋 کپی دستور PowerShell</button>
+            <button class="btn btn-success" onclick="markComplete('openai')">✅ انجام شد</button>
+            
+            <div class="status-box" id="openai-status"></div>
+        </div>
+        
+        <!-- Anthropic -->
+        <div class="service-card" id="anthropic-card">
+            <div class="service-header">
+                <div class="service-title">
+                    <span>🤖</span>
+                    <span>Anthropic Claude</span>
+                    <span class="priority">⭐⭐⭐</span>
+                </div>
+                <span class="badge paid">5$ رایگان</span>
+            </div>
+            
+            <div class="service-info">
+                <strong>مزایا:</strong> Claude 3.5 Sonnet قدرتمند، 5$ اعتبار رایگان
+                <br>
+                <strong>نکته:</strong> نیاز به تایید شماره تلفن
+                <br>
+                <strong>زمان:</strong> 7 دقیقه
+            </div>
+            
+            <div class="link-box">
+                <strong>لینک‌ها:</strong><br>
+                ثبت‌نام: <a href="https://console.anthropic.com/signup" target="_blank">console.anthropic.com/signup</a><br>
+                API Keys: <a href="https://console.anthropic.com/settings/keys" target="_blank">console.anthropic.com/settings/keys</a>
+            </div>
+            
+            <div class="instructions">
+                <strong>مراحل:</strong>
+                <ol>
+                    <li>ثبت‌نام کنید</li>
+                    <li>ایمیل و شماره تلفن را تایید کنید</li>
+                    <li>به API Keys بروید</li>
+                    <li>Create Key کلیک کنید</li>
+                    <li>Name: Trading-Bot</li>
+                    <li>API key را در باکس زیر وارد کنید</li>
+                </ol>
+            </div>
+            
+            <input type="text" class="token-input" id="anthropic-token" placeholder="sk-ant-...">
+            <button class="btn btn-primary" onclick="copyCommand('anthropic')">📋 کپی دستور PowerShell</button>
+            <button class="btn btn-success" onclick="markComplete('anthropic')">✅ انجام شد</button>
+            
+            <div class="status-box" id="anthropic-status"></div>
+        </div>
+        
+        <!-- Summary -->
+        <div class="summary">
+            <h2>📊 خلاصه توکن‌ها</h2>
+            <p>توکن‌هایی که تا کنون تنظیم کرده‌اید:</p>
+            <div class="token-list" id="summary-list">
+                <div class="token-item">
+                    <span>🐙 GitHub Models</span>
+                    <span class="checkmark" id="check-github">✓</span>
+                </div>
+                <div class="token-item">
+                    <span>🧠 Google Gemini</span>
+                    <span class="checkmark" id="check-gemini">✓</span>
+                </div>
+                <div class="token-item">
+                    <span>🤗 Hugging Face</span>
+                    <span class="checkmark" id="check-huggingface">✓</span>
+                </div>
+                <div class="token-item">
+                    <span>💬 OpenAI</span>
+                    <span class="checkmark" id="check-openai">✓</span>
+                </div>
+                <div class="token-item">
+                    <span>🤖 Anthropic</span>
+                    <span class="checkmark" id="check-anthropic">✓</span>
+                </div>
+            </div>
+            <br>
+            <button class="btn btn-success" onclick="showFinalCommands()" style="font-size: 1.2em;">
+                🎉 نمایش دستورات نهایی
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        const completed = {
+            github: false,
+            gemini: false,
+            huggingface: false,
+            openai: false,
+            anthropic: false
+        };
+        
+        function copyCommand(service) {
+            const token = document.getElementById(`${service}-token`).value;
+            if (!token) {
+                alert('ابتدا توکن را وارد کنید!');
+                return;
+            }
+            
+            let command = '';
+            switch(service) {
+                case 'github':
+                    command = `.\\setup_token.ps1 -Service GitHub -Token "${token}"`;
+                    break;
+                case 'gemini':
+                    command = `.\\setup_token.ps1 -Service Google -Token "${token}"`;
+                    break;
+                case 'huggingface':
+                    command = `.\\setup_token.ps1 -Service HuggingFace -Token "${token}"`;
+                    break;
+                case 'openai':
+                    command = `.\\setup_token.ps1 -Service OpenAI -Token "${token}"`;
+                    break;
+                case 'anthropic':
+                    command = `.\\setup_token.ps1 -Service Anthropic -Token "${token}"`;
+                    break;
+            }
+            
+            navigator.clipboard.writeText(command).then(() => {
+                const status = document.getElementById(`${service}-status`);
+                status.className = 'status-box success';
+                status.innerHTML = '✅ دستور کپی شد! در PowerShell paste کنید و Enter بزنید.';
+            });
+        }
+        
+        function markComplete(service) {
+            const token = document.getElementById(`${service}-token`).value;
+            if (!token) {
+                alert('ابتدا توکن را وارد کنید!');
+                return;
+            }
+            
+            completed[service] = true;
+            document.getElementById(`${service}-card`).classList.add('completed');
+            document.getElementById(`check-${service}`).classList.add('show');
+            
+            const status = document.getElementById(`${service}-status`);
+            status.className = 'status-box success';
+            status.innerHTML = '✅ عالی! به توکن بعدی بروید.';
+            
+            updateProgress();
+        }
+        
+        function updateProgress() {
+            const steps = document.querySelectorAll('.step');
+            const services = ['github', 'gemini', 'huggingface', 'openai', 'anthropic'];
+            
+            services.forEach((service, index) => {
+                if (completed[service]) {
+                    steps[index].classList.add('completed');
+                    steps[index].classList.remove('active');
+                    if (index + 1 < steps.length) {
+                        steps[index + 1].classList.add('active');
+                    }
+                }
+            });
+        }
+        
+        function showFinalCommands() {
+            const completedCount = Object.values(completed).filter(v => v).length;
+            if (completedCount === 0) {
+                alert('هنوز هیچ توکنی تنظیم نکرده‌اید!');
+                return;
+            }
+            
+            let message = `🎉 شما ${completedCount} توکن تنظیم کرده‌اید!\n\n`;
+            message += 'برای تست تمام مدل‌ها این دستور را اجرا کنید:\n\n';
+            message += 'python test_ai_models.py';
+            
+            alert(message);
+        }
+    </script>
+</body>
+</html>
