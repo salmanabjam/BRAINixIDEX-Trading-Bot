@@ -17,7 +17,6 @@ sys.path.insert(0, str(src_dir))
 
 from utils.config import Config
 from data.handler import DataHandler
-from data.indicators import TechnicalIndicators
 from core.ml_engine import MLEngine
 from analysis.advanced_chart import AdvancedChartAnalysis
 
@@ -43,7 +42,6 @@ st.markdown(\"\"\"
 if "initialized" not in st.session_state:
     st.session_state.config = Config()
     st.session_state.data_handler = DataHandler()
-    st.session_state.indicators = TechnicalIndicators()
     st.session_state.ml_engine = MLEngine()
     st.session_state.symbol = "BTCUSDT"
     st.session_state.timeframe = "1h"
