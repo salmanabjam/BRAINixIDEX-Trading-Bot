@@ -11,9 +11,12 @@ import pandas as pd
 import numpy as np
 from backtesting import Strategy
 from utils.config import Config
-import logging
+from utils.advanced_logger import get_logger
+from utils.exceptions import StrategyException
+from data.database import get_database
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__, component='Strategy')
+db = get_database()
 
 
 class HybridStrategy(Strategy):
@@ -177,38 +180,100 @@ class SimpleHybridStrategy:
                 'strength': signal strength (0-5),
                 'reason': explanation string
             }
+        
+        Raises:
+            StrategyException: If indicators are invalid
         """
-        # Extract signals
-        combined = indicators_dict.get('combined_signal', 0)
-        trend = indicators_dict.get('trend_signal', 0)
-        breakout = indicators_dict.get('breakout_signal', 0)
-        pullback = indicators_dict.get('pullback_signal', 0)
+        try:
+            # Validate inputs
+            if not indicators_dict:
+                raise StrategyException("Empty indicators dictionary")
 
-        # Apply ML adjustment if enabled
-        if self.use_ml and ml_prediction is not None:
-            ml_score = ml_prediction * (ml_confidence or 0.5)
-            combined += ml_score * self.ml_weight
+            # Extract signals with defaults
+            combined = indicators_dict.get('combined_signal', 0)
+            trend = indicators_dict.get('trend_signal', 0)
+            breakout = indicators_dict.get('breakout_signal', 0)
+            pullback = indicators_dict.get('pullback_signal', 0)
 
-        # Determine action
-        if combined >= self.signal_threshold:
-            action = 'BUY'
-            strength = min(int(combined), 5)
-            reason = self._build_reason(trend, breakout, pullback, ml_prediction)
-        elif combined <= -self.signal_threshold:
-            action = 'SELL'
-            strength = min(int(abs(combined)), 5)
-            reason = self._build_reason(trend, breakout, pullback, ml_prediction)
-        else:
-            action = 'HOLD'
-            strength = 0
-            reason = "No strong signal detected"
+            # Validate signal values
+            if pd.isna(combined):
+                logger.warning("Combined signal is NaN, using 0")
+                combined = 0
 
-        return {
-            'action': action,
-            'strength': strength,
-            'reason': reason,
-            'combined_score': round(combined, 2)
-        }
+            # Apply ML adjustment if enabled
+            if self.use_ml and ml_prediction is not None:
+                try:
+                    ml_score = ml_prediction * (ml_confidence or 0.5)
+                    combined += ml_score * self.ml_weight
+                except (TypeError, ValueError) as e:
+                    logger.warning(f"ML adjustment failed: {e}")
+
+            # Determine action
+            if combined >= self.signal_threshold:
+                action = 'BUY'
+                strength = min(int(combined), 5)
+                reason = self._build_reason(
+                    trend, breakout, pullback, ml_prediction
+                )
+            elif combined <= -self.signal_threshold:
+                action = 'SELL'
+                strength = min(int(abs(combined)), 5)
+                reason = self._build_reason(
+                    trend, breakout, pullback, ml_prediction
+                )
+            else:
+                action = 'HOLD'
+                strength = 0
+                reason = "No strong signal detected"
+
+            signal_result = {
+                'action': action,
+                'strength': strength,
+                'reason': reason,
+                'combined_score': round(combined, 2)
+            }
+
+            # Log signal to database
+            try:
+                symbol = Config.SYMBOL
+                signal_type = action.lower()  # 'buy', 'sell', or 'hold'
+                current_price = indicators_dict.get('close', 0)
+
+                # Build indicators JSON
+                indicators_json = {
+                    'trend': trend,
+                    'breakout': breakout,
+                    'pullback': pullback,
+                    'combined': combined,
+                    'rsi': indicators_dict.get('rsi'),
+                    'adx': indicators_dict.get('adx'),
+                    'atr': indicators_dict.get('atr')
+                }
+
+                db.add_signal(
+                    symbol=symbol,
+                    signal_type=signal_type,
+                    strength=strength,
+                    price=current_price,
+                    indicators=indicators_json,
+                    ml_prediction=ml_prediction or 0,
+                    confidence=ml_confidence or 0
+                )
+                logger.debug(
+                    f"Signal logged to database: "
+                    f"{action} @ {current_price}"
+                )
+            except Exception as e:
+                # Don't fail signal generation if DB logging fails
+                logger.warning(f"Failed to log signal to database: {e}")
+
+            return signal_result
+
+        except StrategyException:
+            raise
+        except Exception as e:
+            logger.error(f"Signal generation failed: {e}", exc_info=True)
+            raise StrategyException(f"Failed to generate signal: {e}")
 
     def _build_reason(self, trend, breakout, pullback, ml_pred):
         """Build human-readable explanation"""

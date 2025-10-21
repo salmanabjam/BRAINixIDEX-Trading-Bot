@@ -8,12 +8,16 @@ Version: 1.0.0
 """
 
 import sys
-import logging
 from pathlib import Path
 from datetime import datetime
 import argparse
 
 from utils.config import Config
+from utils.advanced_logger import get_logger, setup_audit_logger
+from utils.exceptions import (
+    BotException, DataFetchException, ModelPredictionException,
+    StrategyException, RiskManagementException
+)
 from data.handler import DataHandler
 from data.indicators import TechnicalIndicators
 from core.ml_engine import MLEngine
@@ -21,17 +25,9 @@ from core.strategy import SimpleHybridStrategy
 from core.risk_manager import RiskManager
 from analysis.backtest import BacktestEngine
 
-# Setup logging
-log_file = f"logs/bix_tradebot_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
-logging.basicConfig(
-    level=getattr(logging, Config.LOG_LEVEL),
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler(log_file),
-        logging.StreamHandler(sys.stdout)
-    ]
-)
-logger = logging.getLogger(__name__)
+# Setup main logger
+logger = get_logger('BiXTradeBOT', component='MainBot')
+audit_logger = setup_audit_logger()
 
 
 class BiXTradeBOT:
@@ -74,102 +70,181 @@ class BiXTradeBOT:
 
         Args:
             plot_results (bool): Show interactive plot
+        
+        Returns:
+            dict: Backtest results or None on error
         """
         logger.info("\n" + "=" * 60)
         logger.info("📊 Starting Backtest Mode")
         logger.info("=" * 60)
 
-        engine = BacktestEngine(use_ml=Config.ML_ENABLED)
+        try:
+            engine = BacktestEngine(use_ml=Config.ML_ENABLED)
 
-        # Prepare data
-        data = engine.prepare_data(
-            symbol=Config.SYMBOL,
-            timeframe=Config.TIMEFRAME,
-            start_date=Config.BACKTEST_START_DATE,
-            end_date=Config.BACKTEST_END_DATE
-        )
+            # Prepare data
+            data = engine.prepare_data(
+                symbol=Config.SYMBOL,
+                timeframe=Config.TIMEFRAME,
+                start_date=Config.BACKTEST_START_DATE,
+                end_date=Config.BACKTEST_END_DATE
+            )
 
-        # Run backtest
-        results = engine.run(data=data)
+            if data is None or data.empty:
+                logger.error("❌ No data available for backtesting")
+                return None
 
-        # Display results
-        engine.print_results()
+            # Run backtest
+            results = engine.run(data=data)
 
-        # Save results
-        engine.save_results(
-            f"backtest_{Config.SYMBOL}_{Config.TIMEFRAME}_"
-            f"{datetime.now().strftime('%Y%m%d')}.json"
-        )
+            if results is None:
+                logger.error("❌ Backtest execution failed")
+                return None
 
-        if plot_results:
-            logger.info("📈 To view interactive plot, use backtest.py directly")
+            # Display results
+            engine.print_results()
 
-        return results
+            # Save results
+            try:
+                filename = (
+                    f"backtest_{Config.SYMBOL}_{Config.TIMEFRAME}_"
+                    f"{datetime.now().strftime('%Y%m%d')}.json"
+                )
+                engine.save_results(filename)
+                logger.info(f"💾 Results saved to {filename}")
+            except Exception as e:
+                logger.warning(f"⚠️  Failed to save results: {e}")
+
+            if plot_results:
+                logger.info("📈 To view interactive plot, use backtest.py")
+
+            audit_logger.info("Backtest completed", extra={
+                'symbol': Config.SYMBOL,
+                'timeframe': Config.TIMEFRAME,
+                'total_trades': results.get('total_trades', 0)
+            })
+
+            return results
+
+        except DataFetchException as e:
+            logger.error(f"❌ Data fetch error: {e}")
+            return None
+        except Exception as e:
+            logger.error(f"❌ Backtest failed: {e}", exc_info=True)
+            return None
 
     def run_live_analysis(self):
         """
         Run live market analysis (no actual trading).
         Shows current signals and recommendations.
+        
+        Returns:
+            dict: Signal information or None on error
         """
         logger.info("\n" + "=" * 60)
         logger.info("📡 Live Market Analysis")
         logger.info("=" * 60)
 
-        # Fetch latest data
-        df = self.data_handler.fetch_ohlcv(
-            symbol=Config.SYMBOL,
-            timeframe=Config.TIMEFRAME,
-            limit=500
-        )
-
-        # Calculate indicators
-        indicators = TechnicalIndicators(df)
-        df_indicators = indicators.calculate_all()
-
-        # Get latest signals
-        latest_signals = indicators.get_latest_signals()
-
-        # ML prediction
-        ml_pred = None
-        ml_conf = None
-        if self.ml_engine:
-            # Load or train model
-            if not self.ml_engine.load_model():
-                logger.warning("⚠️  Training ML model (this may take a minute)...")
-                self.ml_engine.train(df_indicators)
-
-            # Get prediction - use full dataframe if tail is empty
-            df_for_pred = df_indicators if len(df_indicators) > 0 else df_indicators
-            if len(df_for_pred) > 0:
-                predictions = self.ml_engine.get_prediction_confidence(
-                    df_for_pred
-                )
-                ml_pred = predictions['prediction'].iloc[-1]
-                ml_conf = predictions['confidence'].iloc[-1]
-            else:
-                logger.warning("⚠️  No data available for ML prediction")
-
-        # Generate signal
-        signal = self.strategy.generate_signal(
-            latest_signals,
-            ml_prediction=ml_pred,
-            ml_confidence=ml_conf
-        )
-
-        # Display analysis
-        self._print_analysis(latest_signals, signal, ml_pred, ml_conf)
-
-        # Calculate position size if signal is strong
-        if signal['action'] in ['BUY', 'SELL']:
-            direction = 'long' if signal['action'] == 'BUY' else 'short'
-            position_info = self.risk_manager.calculate_position_size(
-                entry_price=latest_signals['close'],
-                atr=latest_signals['atr'],
-                direction=direction
+        try:
+            # Fetch latest data
+            df = self.data_handler.fetch_ohlcv(
+                symbol=Config.SYMBOL,
+                timeframe=Config.TIMEFRAME,
+                limit=500
             )
-            self._print_position_info(position_info, direction)
 
-        return signal
+            if df is None or df.empty:
+                logger.error("❌ No market data available")
+                return None
+
+            # Calculate indicators
+            indicators = TechnicalIndicators(df)
+            df_indicators = indicators.calculate_all()
+
+            if df_indicators is None or df_indicators.empty:
+                logger.error("❌ Failed to calculate indicators")
+                return None
+
+            # Get latest signals
+            latest_signals = indicators.get_latest_signals()
+
+            if latest_signals is None:
+                logger.error("❌ Failed to get latest signals")
+                return None
+
+            # ML prediction
+            ml_pred = None
+            ml_conf = None
+            if self.ml_engine:
+                try:
+                    # Load or train model
+                    if not self.ml_engine.load_model():
+                        logger.warning(
+                            "⚠️  Training ML model "
+                            "(this may take a minute)..."
+                        )
+                        self.ml_engine.train(df_indicators)
+
+                    # Get prediction
+                    if len(df_indicators) > 0:
+                        predictions = self.ml_engine.get_prediction_confidence(
+                            df_indicators
+                        )
+                        if predictions is not None and not predictions.empty:
+                            ml_pred = predictions['prediction'].iloc[-1]
+                            ml_conf = predictions['confidence'].iloc[-1]
+                        else:
+                            logger.warning(
+                                "⚠️  ML prediction returned empty"
+                            )
+                    else:
+                        logger.warning("⚠️  No data for ML prediction")
+
+                except ModelPredictionException as e:
+                    logger.warning(f"⚠️  ML prediction failed: {e}")
+                except Exception as e:
+                    logger.warning(f"⚠️  ML error: {e}")
+
+            # Generate signal
+            try:
+                signal = self.strategy.generate_signal(
+                    latest_signals,
+                    ml_prediction=ml_pred,
+                    ml_confidence=ml_conf
+                )
+            except StrategyException as e:
+                logger.error(f"❌ Strategy error: {e}")
+                return None
+
+            # Display analysis
+            self._print_analysis(latest_signals, signal, ml_pred, ml_conf)
+
+            # Calculate position size if signal is strong
+            if signal['action'] in ['BUY', 'SELL']:
+                try:
+                    direction = 'long' if signal['action'] == 'BUY' else 'short'
+                    position_info = self.risk_manager.calculate_position_size(
+                        entry_price=latest_signals['close'],
+                        atr=latest_signals['atr'],
+                        direction=direction
+                    )
+                    self._print_position_info(position_info, direction)
+                except RiskManagementException as e:
+                    logger.warning(f"⚠️  Position sizing failed: {e}")
+
+            audit_logger.info("Live analysis completed", extra={
+                'symbol': Config.SYMBOL,
+                'action': signal.get('action', 'UNKNOWN'),
+                'strength': signal.get('strength', 0)
+            })
+
+            return signal
+
+        except DataFetchException as e:
+            logger.error(f"❌ Data fetch error: {e}")
+            return None
+        except Exception as e:
+            logger.error(f"❌ Live analysis failed: {e}", exc_info=True)
+            return None
 
     def _print_analysis(self, indicators, signal, ml_pred, ml_conf):
         """Print formatted market analysis"""
@@ -224,31 +299,63 @@ class BiXTradeBOT:
         print("=" * 60 + "\n")
 
     def run_training(self):
-        """Train or retrain ML model"""
+        """
+        Train or retrain ML model
+        
+        Returns:
+            dict: Training metrics or None on error
+        """
         logger.info("\n" + "=" * 60)
         logger.info("🎓 ML Model Training")
         logger.info("=" * 60)
 
         if not self.ml_engine:
             logger.error("❌ ML is disabled in config")
-            return
+            return None
 
-        # Fetch data
-        df = self.data_handler.fetch_ohlcv(limit=2000)
+        try:
+            # Fetch data
+            df = self.data_handler.fetch_ohlcv(limit=2000)
 
-        # Calculate indicators
-        indicators = TechnicalIndicators(df)
-        df_indicators = indicators.calculate_all()
+            if df is None or df.empty:
+                logger.error("❌ No data available for training")
+                return None
 
-        # Train
-        metrics = self.ml_engine.train(df_indicators)
+            # Calculate indicators
+            indicators = TechnicalIndicators(df)
+            df_indicators = indicators.calculate_all()
 
-        print("\n✅ Training Complete!")
-        print(f"  Accuracy:      {metrics['accuracy']:.4f}")
-        print(f"  Training Size: {metrics['train_size']}")
-        print(f"  Test Size:     {metrics['test_size']}")
-        print(f"  Features:      {metrics['features']}")
-        print("=" * 60 + "\n")
+            if df_indicators is None or df_indicators.empty:
+                logger.error("❌ Failed to calculate indicators")
+                return None
+
+            # Train
+            metrics = self.ml_engine.train(df_indicators)
+
+            if metrics is None:
+                logger.error("❌ Training failed")
+                return None
+
+            print("\n✅ Training Complete!")
+            print(f"  Accuracy:      {metrics.get('accuracy', 0):.4f}")
+            print(f"  Training Size: {metrics.get('train_size', 0)}")
+            print(f"  Test Size:     {metrics.get('test_size', 0)}")
+            print(f"  Features:      {metrics.get('features', 0)}")
+            print("=" * 60 + "\n")
+
+            audit_logger.info("ML model trained", extra={
+                'accuracy': metrics.get('accuracy', 0),
+                'features': metrics.get('features', 0)
+            })
+
+            return metrics
+
+        except DataFetchException as e:
+            logger.error(f"❌ Data fetch error: {e}")
+            return None
+        except Exception as e:
+            logger.error(f"❌ Training failed: {e}", exc_info=True)
+            return None
 
 
 def main():

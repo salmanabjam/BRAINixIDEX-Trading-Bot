@@ -18,6 +18,10 @@ class DataValidationException(BotException):
     pass
 
 
+# Alias for backward compatibility
+ValidationException = DataValidationException
+
+
 class ModelTrainingException(BotException):
     """Raised when ML model training fails"""
     pass

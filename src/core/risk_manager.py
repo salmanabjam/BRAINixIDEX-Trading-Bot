@@ -8,10 +8,12 @@ Version: 1.0.0
 """
 
 import pandas as pd
-import logging
 from utils.config import Config
+from utils.advanced_logger import get_logger
+from data.database import get_database
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__, component='RiskManager')
+db = get_database()
 
 
 class RiskManager:
@@ -20,21 +22,25 @@ class RiskManager:
     and dynamic stop loss.
     """
 
-    def __init__(self, initial_capital=None):
+    def __init__(self, initial_capital=None, risk_per_trade=None):
         """
         Initialize risk manager.
 
         Args:
             initial_capital (float): Starting capital in USD
+            risk_per_trade (float): Risk percentage per trade (0.01 = 1%)
         """
         self.initial_capital = initial_capital or Config.INITIAL_CAPITAL
+        self.current_capital = self.initial_capital
         self.current_equity = self.initial_capital
+        self.risk_per_trade = risk_per_trade or Config.RISK_PER_TRADE
         self.positions = []
         self.trade_history = []
 
         logger.info(
-            f"💼 Risk Manager initialized with "
-            f"${self.initial_capital:,.2f} capital"
+            "Risk Manager initialized",
+            capital=self.initial_capital,
+            risk_pct=self.risk_per_trade
         )
 
     def calculate_position_size(self, entry_price, atr, direction='long'):
@@ -58,10 +64,15 @@ class RiskManager:
             }
         """
         # Risk amount in USD
-        risk_amount = self.current_equity * Config.RISK_PER_TRADE
+        risk_amount = self.current_capital * self.risk_per_trade
 
         # Stop loss distance
         stop_distance = atr * Config.ATR_STOP_MULTIPLIER
+        
+        # Handle zero ATR
+        if stop_distance == 0:
+            logger.warning("ATR is zero, using minimum position size")
+            stop_distance = entry_price * 0.01  # 1% fallback
 
         # Position size calculation
         position_size = risk_amount / stop_distance
@@ -70,13 +81,13 @@ class RiskManager:
         position_value = position_size * entry_price
 
         # Apply max position size constraint
-        max_position_value = self.current_equity * Config.MAX_POSITION_SIZE
+        max_position_value = self.current_capital * Config.MAX_POSITION_SIZE
         if position_value > max_position_value:
             position_value = max_position_value
             position_size = position_value / entry_price
             logger.warning(
-                f"⚠️  Position size capped at "
-                f"{Config.MAX_POSITION_SIZE*100}% of equity"
+                "Position size capped",
+                max_pct=Config.MAX_POSITION_SIZE * 100
             )
 
         # Calculate stop loss and take profit
@@ -136,6 +147,23 @@ class RiskManager:
         }
 
         self.positions.append(position)
+
+        # Log to database
+        try:
+            trade_id = db.add_trade(
+                symbol=symbol,
+                side=direction,
+                entry_price=entry_price,
+                quantity=size,
+                stop_loss=stop_loss,
+                take_profit=take_profit,
+                strategy='HybridStrategy'
+            )
+            position['db_id'] = trade_id
+            logger.debug(f"Trade logged to database with ID: {trade_id}")
+        except Exception as e:
+            logger.warning(f"Failed to log trade to database: {e}")
+
         logger.info(
             f"🟢 Opened {direction.upper()} position: "
             f"{size} {symbol} @ ${entry_price:,.2f}"
@@ -170,6 +198,20 @@ class RiskManager:
         # Update equity
         self.current_equity += pnl
 
+        # Update database
+        if 'db_id' in position:
+            try:
+                db.close_trade(
+                    trade_id=position['db_id'],
+                    exit_price=exit_price,
+                    notes=exit_reason
+                )
+                logger.debug(
+                    f"Trade {position['db_id']} closed in database"
+                )
+            except Exception as e:
+                logger.warning(f"Failed to update trade in database: {e}")
+
         # Record trade
         trade = {
             **position,
@@ -195,6 +237,20 @@ class RiskManager:
         )
 
         return trade
+
+    def update_capital(self, pnl):
+        """
+        Update current capital with profit/loss.
+
+        Args:
+            pnl (float): Profit or loss amount (positive or negative)
+        """
+        self.current_capital += pnl
+        logger.info(
+            "Capital updated",
+            pnl=pnl,
+            new_capital=self.current_capital
+        )
 
     def check_stop_loss_take_profit(self, current_price):
         """

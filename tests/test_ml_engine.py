@@ -38,7 +38,15 @@ class TestMLEngine:
             'adx': np.random.uniform(20, 40, 500),
             'bb_upper': close_prices * 1.02,
             'bb_middle': close_prices,
-            'bb_lower': close_prices * 0.98
+            'bb_lower': close_prices * 0.98,
+            'donchian_upper': close_prices * 1.03,
+            'donchian_lower': close_prices * 0.97,
+            'di_plus': np.random.uniform(15, 35, 500),
+            'di_minus': np.random.uniform(15, 35, 500),
+            'trend_signal': np.random.choice([0, 1, 2], 500),
+            'breakout_signal': np.random.choice([0, 1, 2], 500),
+            'pullback_signal': np.random.choice([0, 1, 2], 500),
+            'combined_signal': np.random.choice([0, 1, 2], 500)
         }
         df = pd.DataFrame(data, index=dates)
         return df
@@ -106,9 +114,14 @@ class TestMLEngine:
         assert hasattr(ml_engine, 'feature_columns')
         assert len(ml_engine.feature_columns) > 0
     
-    def test_predict_without_training(self, ml_engine, sample_data_with_indicators):
-        """Test prediction without training (should fail)"""
+    def test_predict_without_training(self, tmp_path, sample_data_with_indicators):
+        """Test prediction without training (should load existing model or fail)"""
+        # Create fresh MLEngine with non-existent model path
+        ml_engine = MLEngine(timeframe='test_nonexistent')
+        ml_engine.model_path = tmp_path / 'nonexistent_model.pkl'
+        
         predictions = ml_engine.predict(sample_data_with_indicators)
+        # Should return None when no model exists
         assert predictions is None
     
     def test_train_with_insufficient_data(self, ml_engine):

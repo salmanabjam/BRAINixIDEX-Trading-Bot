@@ -14,6 +14,7 @@ from datetime import datetime
 from typing import Dict, List, Any, Optional
 from pathlib import Path
 import time
+from utils.exceptions import DataFetchException
 
 logger = logging.getLogger(__name__)
 

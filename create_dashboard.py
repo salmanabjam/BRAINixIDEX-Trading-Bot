@@ -1,6 +1,9 @@
-"""
+"""Create Ultimate Dashboard"""
+from pathlib import Path
+
+dashboard_code = """\"\"\"
 BiX TradeBOT Ultimate Dashboard
-"""
+\"\"\"
 import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
@@ -30,12 +33,12 @@ st.set_page_config(
     layout='wide'
 )
 
-st.markdown("""
+st.markdown(\"\"\"
 <style>
     @import url("https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css");
     * { font-family: Vazir, Tahoma, sans-serif !important; direction: rtl !important; }
 </style>
-""", unsafe_allow_html=True)
+\"\"\", unsafe_allow_html=True)
 
 if "initialized" not in st.session_state:
     st.session_state.config = Config()
@@ -90,3 +93,9 @@ else:
 
 st.markdown("---")
 st.markdown("<p style='text-align:center'>BiX TradeBOT v2.0 Ultimate</p>", unsafe_allow_html=True)
+"""
+
+# Write dashboard file
+dashboard_path = Path("src/ui/dashboard.py")
+dashboard_path.write_text(dashboard_code, encoding='utf-8')
+print(f"✅ Dashboard created: {dashboard_path}")

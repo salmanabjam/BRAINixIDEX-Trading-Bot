@@ -1,0 +1,823 @@
+{
+  "metadata": {
+    "symbol": "BTCUSDT",
+    "exchange": "BINANCE",
+    "base_currency": "BTC",
+    "generated_at": "2025-10-20T20:13:28.664019",
+    "timezone": "UTC"
+  },
+  "news_headlines": {
+    "total_count": 0,
+    "items": [],
+    "sources": [],
+    "sentiment_breakdown": {
+      "bullish": 0,
+      "bearish": 0,
+      "neutral": 0
+    }
+  },
+  "community_ideas": {
+    "total_count": 0,
+    "items": [],
+    "sentiment_breakdown": {
+      "bullish": 0,
+      "bearish": 0,
+      "neutral": 0
+    }
+  },
+  "conversation_status": {
+    "timestamp": "2025-10-20T20:13:28.664019",
+    "symbol": "BTCUSDT",
+    "conversation_count": 0,
+    "active_users": 0,
+    "bullish_mentions": 0,
+    "bearish_mentions": 0,
+    "sentiment_score": 0.0,
+    "raw_data": {
+      "messages": [
+        {
+          "id": "8cb62fce-d6ac-4ac7-8bd3-2a615cb9f1af",
+          "user_id": 73954721,
+          "text": "@jimmy_highwire ok man. Just really not in a joking mood when it comes to you. Please lets keep it trading related. Or you can just ignore if i bother you so much",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "",
+          "interval": "",
+          "time": "Mon Oct 20 16:41:35 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/73954721-gXGD_mid.png",
+          "username": "Spankky27",
+          "badges": [
+            {
+              "name": "pro:pro_premium",
+              "verbose_name": "Premium"
+            }
+          ],
+          "is_moderator": false
+        },
+        {
+          "id": "eb8ae020-679b-4fdd-b6c0-3c473ed786a4",
+          "user_id": 77841,
+          "text": "[quote=\"Spankky27\"]T Of course hes going to be talked about more. Especially when its trading related[/quote]\ntrading related ???\nwho thinks trump is banging Noem kristi\nbarron went running to say to say he's losing on btc\n\noh i see now... you do make sense :joy:... again",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "60",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "PEPPERSTONE:NAS100",
+          "interval": "60",
+          "time": "Mon Oct 20 16:39:57 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/77841-0kvE_mid.png",
+          "username": "jimmy_highwire",
+          "badges": [],
+          "is_moderator": false
+        },
+        {
+          "id": "6a2cc043-5018-45a0-8686-6cedabdf33c1",
+          "user_id": 42566896,
+          "text": "rdhl",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "5",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "NASDAQ:EPWK",
+          "interval": "5",
+          "time": "Mon Oct 20 16:37:19 2025 UTC",
+          "user_pic": "data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220,0,20,20%22%20width=%2296%22%20height=%2296%22%3E%3Crect%20height=%2220%22%20width=%2220%22%20fill=%22hsl%28132,25%25,50%25%29%22/%3E%3Ctext%20fill=%22white%22%20x=%2210%22%20y=%2214.8%22%20font-size=%2214%22%20font-family=%22-apple-system,BlinkMacSystemFont,Trebuchet%20MS,Roboto,Ubuntu,sans-serif%22%20text-anchor=%22middle%22%3EN%3C/text%3E%3C/svg%3E",
+          "username": "nishaskinspa",
+          "badges": [
+            {
+              "name": "pro:pro_premium",
+              "verbose_name": "Premium"
+            }
+          ],
+          "is_moderator": false
+        },
+        {
+          "id": "599c3ab9-f107-4892-9c4c-c16f66e6ea73",
+          "user_id": 73954721,
+          "text": "So far its looking like eu may be short even tomorrow. We will see eod",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "",
+          "interval": "",
+          "time": "Mon Oct 20 16:35:25 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/73954721-gXGD_mid.png",
+          "username": "Spankky27",
+          "badges": [
+            {
+              "name": "pro:pro_premium",
+              "verbose_name": "Premium"
+            }
+          ],
+          "is_moderator": false
+        },
+        {
+          "id": "0ded1cdd-27c7-46bc-9b89-8aedf3ac2a55",
+          "user_id": 73954721,
+          "text": "Times changed. You have a president the single most controversial president in probably all of american history tweeting everyday. He has more exposure than biden/biden administration. Of course hes going to be talked about more. Especially when its trading related",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "",
+          "interval": "",
+          "time": "Mon Oct 20 16:33:17 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/73954721-gXGD_mid.png",
+          "username": "Spankky27",
+          "badges": [
+            {
+              "name": "pro:pro_premium",
+              "verbose_name": "Premium"
+            }
+          ],
+          "is_moderator": false
+        },
+        {
+          "id": "8d586642-69a3-4dd0-9156-4fd7e0d1e859",
+          "user_id": 19819193,
+          "text": "AU has made a Breakout of the Inverted Head and Shoulders its been forming. Waiting on a successful retest to take to the next Resistance level @ .6610",
+          "type": "",
+          "meta": {
+            "text": "Chart Snapshot",
+            "url": "https://s3.tradingview.com/snapshots/n/nSEgSqG9.png",
+            "preview_url": "https://s3.tradingview.com/snapshots/n/nSEgSqG9_thumb.png",
+            "type": "snapshot",
+            "interval": "240",
+            "links": {},
+            "version": "0.2",
+            "temp": {
+              "message_likes": {
+                "voted": false,
+                "count": 0
+              }
+            }
+          },
+          "room_id": "general",
+          "symbol": "FX:AUDUSD",
+          "interval": "240",
+          "time": "Mon Oct 20 16:33:02 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/19819193-r0ls_mid.png",
+          "username": "Novi_Fibonacci",
+          "badges": [
+            {
+              "name": "moderator",
+              "verbose_name": "TradingView moderator"
+            },
+            {
+              "name": "pro:pro_premium_expert",
+              "verbose_name": "Ultimate"
+            }
+          ],
+          "is_moderator": true
+        },
+        {
+          "id": "f8244e2b-e7bc-406b-84d4-0fb3afe53a8f",
+          "user_id": 73954721,
+          "text": "both sides do it and its very wrong",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "",
+          "interval": "",
+          "time": "Mon Oct 20 16:31:36 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/73954721-gXGD_mid.png",
+          "username": "Spankky27",
+          "badges": [
+            {
+              "name": "pro:pro_premium",
+              "verbose_name": "Premium"
+            }
+          ],
+          "is_moderator": false
+        },
+        {
+          "id": "b6553dcf-6ab9-421e-aaac-16277d50da7a",
+          "user_id": 73954721,
+          "text": "I dont agree with congress trading",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "",
+          "interval": "",
+          "time": "Mon Oct 20 16:31:23 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/73954721-gXGD_mid.png",
+          "username": "Spankky27",
+          "badges": [
+            {
+              "name": "pro:pro_premium",
+              "verbose_name": "Premium"
+            }
+          ],
+          "is_moderator": false
+        },
+        {
+          "id": "9164b1cf-1e33-45f3-bf2e-6675d2d8aa0a",
+          "user_id": 77841,
+          "text": "[quote=\"Spankky27\"]I never said trump is a crook. Even tho. Inside trading IS very wrong.[/quote]\nit was legal for members of congress :joy:\nas always... you are so onesided\ni didn't hear you go off like that when Biden was 'in charge'",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "60",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "PEPPERSTONE:NAS100",
+          "interval": "60",
+          "time": "Mon Oct 20 16:31:08 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/77841-0kvE_mid.png",
+          "username": "jimmy_highwire",
+          "badges": [],
+          "is_moderator": false
+        },
+        {
+          "id": "a3338232-bf11-46aa-96ed-afecd6a7d3b9",
+          "user_id": 73954721,
+          "text": "I never said trump is a crook. Even tho. Inside trading IS very wrong.",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "",
+          "interval": "",
+          "time": "Mon Oct 20 16:29:57 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/73954721-gXGD_mid.png",
+          "username": "Spankky27",
+          "badges": [
+            {
+              "name": "pro:pro_premium",
+              "verbose_name": "Premium"
+            }
+          ],
+          "is_moderator": false
+        },
+        {
+          "id": "9063cc53-0093-45fc-907a-92d85adcb78b",
+          "user_id": 77841,
+          "text": "yes.... hilarious.... :sarcasm:\nyes... trump is a crook and so is everyone shaking his hand\ngetting tiresome",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "60",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "PEPPERSTONE:NAS100",
+          "interval": "60",
+          "time": "Mon Oct 20 16:29:25 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/77841-0kvE_mid.png",
+          "username": "jimmy_highwire",
+          "badges": [],
+          "is_moderator": false
+        },
+        {
+          "id": "2477c211-4969-404d-9e74-2ad493feb9fd",
+          "user_id": 73954721,
+          "text": "every time trump makes a news announcement someone right before it profits tremendously",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "",
+          "interval": "",
+          "time": "Mon Oct 20 16:28:39 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/73954721-gXGD_mid.png",
+          "username": "Spankky27",
+          "badges": [
+            {
+              "name": "pro:pro_premium",
+              "verbose_name": "Premium"
+            }
+          ],
+          "is_moderator": false
+        },
+        {
+          "id": "83098224-6430-4c2c-b4ac-366fc910f89b",
+          "user_id": 73954721,
+          "text": "Someone said trump was going to make another tariff announcement. You do know barron is trump’s son right. I was making a joke that he was pulling his daddys coattail",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "",
+          "interval": "",
+          "time": "Mon Oct 20 16:27:55 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/73954721-gXGD_mid.png",
+          "username": "Spankky27",
+          "badges": [
+            {
+              "name": "pro:pro_premium",
+              "verbose_name": "Premium"
+            }
+          ],
+          "is_moderator": false
+        },
+        {
+          "id": "f164bd74-a866-459f-acdc-3cf4c0e47c6f",
+          "user_id": 77841,
+          "text": "hahahaha... he lost...... so?",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "60",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "PEPPERSTONE:NAS100",
+          "interval": "60",
+          "time": "Mon Oct 20 16:26:02 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/77841-0kvE_mid.png",
+          "username": "jimmy_highwire",
+          "badges": [],
+          "is_moderator": false
+        },
+        {
+          "id": "96c50be1-d97d-4969-ba15-c839b38dd656",
+          "user_id": 77841,
+          "text": "seems your jokes are always at the expense of someone... a bit of schadenfreude... not becoming at all",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "60",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "PEPPERSTONE:NAS100",
+          "interval": "60",
+          "time": "Mon Oct 20 16:25:46 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/77841-0kvE_mid.png",
+          "username": "jimmy_highwire",
+          "badges": [],
+          "is_moderator": false
+        },
+        {
+          "id": "7067ea65-1f81-4513-857c-284144f31159",
+          "user_id": 73954721,
+          "text": "It was a joke",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "",
+          "interval": "",
+          "time": "Mon Oct 20 16:24:27 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/73954721-gXGD_mid.png",
+          "username": "Spankky27",
+          "badges": [
+            {
+              "name": "pro:pro_premium",
+              "verbose_name": "Premium"
+            }
+          ],
+          "is_moderator": false
+        },
+        {
+          "id": "26da1ad7-ca55-4a7b-844b-5e194e281728",
+          "user_id": 73954721,
+          "text": "[quote=\"jimmy_highwire\"]at the kindergarten again?[/quote]\n? That guy went short btc big time when trump did that tariff announcement 2 weeks ago",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "",
+          "interval": "",
+          "time": "Mon Oct 20 16:24:18 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/73954721-gXGD_mid.png",
+          "username": "Spankky27",
+          "badges": [
+            {
+              "name": "pro:pro_premium",
+              "verbose_name": "Premium"
+            }
+          ],
+          "is_moderator": false
+        },
+        {
+          "id": "70eb48ee-2f2c-46fb-984a-811652c81228",
+          "user_id": 77841,
+          "text": "[quote=\"Spankky27\"]Barron went crying to his daddy and said we were making him lose[/quote]\nat the kindergarten again?",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "60",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "PEPPERSTONE:NAS100",
+          "interval": "60",
+          "time": "Mon Oct 20 16:20:06 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/77841-0kvE_mid.png",
+          "username": "jimmy_highwire",
+          "badges": [],
+          "is_moderator": false
+        },
+        {
+          "id": "4c4ffd3d-79ba-4057-9e43-c05349ff478f",
+          "user_id": 76196664,
+          "text": "How many bears just got trapped?",
+          "type": "",
+          "meta": {
+            "text": "",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "",
+          "interval": "",
+          "time": "Mon Oct 20 16:12:08 2025 UTC",
+          "user_pic": "data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220,0,20,20%22%20width=%2296%22%20height=%2296%22%3E%3Crect%20height=%2220%22%20width=%2220%22%20fill=%22hsl%28303,25%25,50%25%29%22/%3E%3Ctext%20fill=%22white%22%20x=%2210%22%20y=%2214.8%22%20font-size=%2214%22%20font-family=%22-apple-system,BlinkMacSystemFont,Trebuchet%20MS,Roboto,Ubuntu,sans-serif%22%20text-anchor=%22middle%22%3ES%3C/text%3E%3C/svg%3E",
+          "username": "Snaporino",
+          "badges": [
+            {
+              "name": "pro:pro_realtime",
+              "verbose_name": "Plus"
+            }
+          ],
+          "is_moderator": false
+        },
+        {
+          "id": "4baa0516-6c58-41f5-abff-f3f3910b1cf4",
+          "user_id": 1018730,
+          "text": "gold :rocket:",
+          "type": "",
+          "meta": {
+            "text": "Chart Snapshot",
+            "url": "https://s3.tradingview.com/snapshots/0/04uM8F4m.png",
+            "preview_url": "https://s3.tradingview.com/snapshots/0/04uM8F4m_thumb.png",
+            "type": "snapshot",
+            "interval": "60",
+            "links": {},
+            "version": "0.2",
+            "temp": {
+              "message_likes": {
+                "voted": false,
+                "count": 0
+              }
+            }
+          },
+          "room_id": "general",
+          "symbol": "COMEX_MINI:MGC1!",
+          "interval": "60",
+          "time": "Mon Oct 20 16:12:04 2025 UTC",
+          "user_pic": "data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220,0,20,20%22%20width=%2296%22%20height=%2296%22%3E%3Crect%20height=%2220%22%20width=%2220%22%20fill=%22hsl%2815,25%25,50%25%29%22/%3E%3Ctext%20fill=%22white%22%20x=%2210%22%20y=%2214.8%22%20font-size=%2214%22%20font-family=%22-apple-system,BlinkMacSystemFont,Trebuchet%20MS,Roboto,Ubuntu,sans-serif%22%20text-anchor=%22middle%22%3ES%3C/text%3E%3C/svg%3E",
+          "username": "SirTraderUSA",
+          "badges": [
+            {
+              "name": "pro:pro",
+              "verbose_name": "Essential"
+            }
+          ],
+          "is_moderator": false
+        },
+        {
+          "id": "4fabfd65-e938-4342-b315-34c3ab12ae01",
+          "user_id": 73954721,
+          "text": "Barron went crying to his daddy and said we were making him lose",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "",
+          "interval": "",
+          "time": "Mon Oct 20 16:08:11 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/73954721-gXGD_mid.png",
+          "username": "Spankky27",
+          "badges": [
+            {
+              "name": "pro:pro_premium",
+              "verbose_name": "Premium"
+            }
+          ],
+          "is_moderator": false
+        },
+        {
+          "id": "5991a0da-d10c-437c-a5b0-8e47a65ba46d",
+          "user_id": 102507780,
+          "text": "uh oh!",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "3",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "NASDAQ:AMD",
+          "interval": "3",
+          "time": "Mon Oct 20 16:07:12 2025 UTC",
+          "user_pic": "data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220,0,20,20%22%20width=%2296%22%20height=%2296%22%3E%3Crect%20height=%2220%22%20width=%2220%22%20fill=%22hsl%2857,25%25,50%25%29%22/%3E%3Ctext%20fill=%22white%22%20x=%2210%22%20y=%2214.8%22%20font-size=%2214%22%20font-family=%22-apple-system,BlinkMacSystemFont,Trebuchet%20MS,Roboto,Ubuntu,sans-serif%22%20text-anchor=%22middle%22%3ED%3C/text%3E%3C/svg%3E",
+          "username": "dodatstik",
+          "badges": [
+            {
+              "name": "pro:pro",
+              "verbose_name": "Essential"
+            }
+          ],
+          "is_moderator": false
+        },
+        {
+          "id": "34ac4d7b-bf8f-48b2-856e-07b77b8c9525",
+          "user_id": 43999985,
+          "text": "Trump opened his mouth bout tariff again",
+          "type": "",
+          "meta": {
+            "interval": "",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "",
+          "interval": "",
+          "time": "Mon Oct 20 16:02:06 2025 UTC",
+          "user_pic": "data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220,0,20,20%22%20width=%2296%22%20height=%2296%22%3E%3Crect%20height=%2220%22%20width=%2220%22%20fill=%22hsl%28282,25%25,50%25%29%22/%3E%3Ctext%20fill=%22white%22%20x=%2210%22%20y=%2214.8%22%20font-size=%2214%22%20font-family=%22-apple-system,BlinkMacSystemFont,Trebuchet%20MS,Roboto,Ubuntu,sans-serif%22%20text-anchor=%22middle%22%3EA%3C/text%3E%3C/svg%3E",
+          "username": "AstroEdgeX",
+          "badges": [
+            {
+              "name": "pro:pro",
+              "verbose_name": "Essential"
+            }
+          ],
+          "is_moderator": false
+        },
+        {
+          "id": "10a0c7a0-d0f9-4cf0-a513-13ceaeb8720b",
+          "user_id": 1186098,
+          "text": "@Spankky27 @xxxwhitevaderxxx 🍿 🥤",
+          "type": "",
+          "meta": {
+            "interval": "",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "",
+          "interval": "",
+          "time": "Mon Oct 20 15:56:54 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/1186098-P5pQ_mid.png",
+          "username": "Dont_touch_therewall91",
+          "badges": [],
+          "is_moderator": false
+        },
+        {
+          "id": "56a6e0c6-9dfc-45b9-9ad8-e5bb91466a4f",
+          "user_id": 77841,
+          "text": "[quote=\"jimmy_highwire\"]AU H1\nfighting to stay on top of that hidden tl...\nif so, looking for 0,6550\nhttps://s3.tradingview.com/snapshots/c/cQy25WL2.png[/quote]\nclosing AU longs here for +20some pips\ngood enough for the day",
+          "type": "",
+          "meta": {
+            "text": "Chart Snapshot",
+            "url": "https://s3.tradingview.com/snapshots/c/CE8zLGdr.png",
+            "preview_url": "https://s3.tradingview.com/snapshots/c/CE8zLGdr_thumb.png",
+            "type": "snapshot",
+            "interval": "60",
+            "links": {},
+            "version": "0.2",
+            "temp": {
+              "message_likes": {
+                "voted": false,
+                "count": 0
+              }
+            }
+          },
+          "room_id": "general",
+          "symbol": "FX:AUDUSD",
+          "interval": "60",
+          "time": "Mon Oct 20 15:51:09 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/77841-0kvE_mid.png",
+          "username": "jimmy_highwire",
+          "badges": [],
+          "is_moderator": false
+        },
+        {
+          "id": "9410fe2d-4836-470e-8a00-d9b8cd8f9e30",
+          "user_id": 78020387,
+          "text": "https://www.tradingview.com/chart/BTCUSD/SlcDFYsy-Bitcoin-Market-Preparing-for-Upside-Move/",
+          "type": "",
+          "meta": {
+            "text": "",
+            "links": {
+              "charts": {
+                "occurences": [
+                  {
+                    "start": 0,
+                    "end": 91,
+                    "match": "https://www.tradingview.com/chart/BTCUSD/SlcDFYsy-Bitcoin-Market-Preparing-for-Upside-Move/",
+                    "id": "SlcDFYsy"
+                  }
+                ],
+                "data": {
+                  "SlcDFYsy": {
+                    "pk": 19759154,
+                    "image_url": "SlcDFYsy",
+                    "user_id": 78020387,
+                    "name": "Bitcoin Market Preparing for Upside Move",
+                    "symbol": "BINANCE:BTCUSD",
+                    "published_chart_url": "/chart/BTCUSD/SlcDFYsy-Bitcoin-Market-Preparing-for-Upside-Move/",
+                    "is_video": false,
+                    "video_cam": false,
+                    "script_type": ""
+                  }
+                }
+              }
+            },
+            "version": "0.2",
+            "temp": {
+              "chart_likes": {
+                "SlcDFYsy": {
+                  "voted": false,
+                  "count": 11
+                }
+              }
+            }
+          },
+          "room_id": "general",
+          "symbol": "",
+          "interval": "",
+          "time": "Mon Oct 20 15:43:01 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/78020387-ksno_mid.png",
+          "username": "XAU_EMPIRE",
+          "badges": [
+            {
+              "name": "pro:pro_premium",
+              "verbose_name": "Premium"
+            }
+          ],
+          "is_moderator": false
+        },
+        {
+          "id": "7525fe98-a8a0-497f-b609-67be9c6848cb",
+          "user_id": 78020387,
+          "text": "btc is bulling",
+          "type": "",
+          "meta": {
+            "text": "",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "",
+          "interval": "",
+          "time": "Mon Oct 20 15:43:00 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/78020387-ksno_mid.png",
+          "username": "XAU_EMPIRE",
+          "badges": [
+            {
+              "name": "pro:pro_premium",
+              "verbose_name": "Premium"
+            }
+          ],
+          "is_moderator": false
+        },
+        {
+          "id": "41d26d51-5c0e-4dd5-8137-23bc4155205f",
+          "user_id": 828371,
+          "text": "find hidden bearish divergence :joy: :inverted_rocket:",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "1D",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "BINANCE:BTCUSDT.P",
+          "interval": "1D",
+          "time": "Mon Oct 20 15:42:56 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/828371-Sd1L_mid.png",
+          "username": "Bro-of-Ced-Rich",
+          "badges": [
+            {
+              "name": "pro:pro",
+              "verbose_name": "Essential"
+            }
+          ],
+          "is_moderator": false
+        },
+        {
+          "id": "c820afa6-9c49-4874-8bcb-acc2ba86f8f5",
+          "user_id": 73954721,
+          "text": "😈",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "",
+          "interval": "",
+          "time": "Mon Oct 20 15:41:45 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/73954721-gXGD_mid.png",
+          "username": "Spankky27",
+          "badges": [
+            {
+              "name": "pro:pro_premium",
+              "verbose_name": "Premium"
+            }
+          ],
+          "is_moderator": false
+        },
+        {
+          "id": "004424f2-1037-476e-8ea8-ebee67fdfa98",
+          "user_id": 1494544,
+          "text": ":D",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "20",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "OANDA:EURUSD",
+          "interval": "20",
+          "time": "Mon Oct 20 15:41:25 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/1494544-GDna_mid.png",
+          "username": "xxxwhitevaderxxx",
+          "badges": [
+            {
+              "name": "pro:pro_premium",
+              "verbose_name": "Premium"
+            }
+          ],
+          "is_moderator": false
+        }
+      ]
+    }
+  },
+  "overall_analysis": {
+    "sentiment": "neutral",
+    "sentiment_score": 0.0,
+    "confidence": 0.0,
+    "recommendation": "HOLD - سیگنال‌های متناقض",
+    "key_factors": []
+  },
+  "statistics": {
+    "total_news": 0,
+    "total_ideas": 0,
+    "bullish_signals": 0,
+    "bearish_signals": 0,
+    "neutral_signals": 0
+  }
+}

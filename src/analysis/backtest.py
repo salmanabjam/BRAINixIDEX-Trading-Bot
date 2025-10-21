@@ -8,16 +8,19 @@ Version: 1.0.0
 """
 
 import pandas as pd
+import json
 from backtesting import Backtest
 from core.strategy import HybridStrategy
 from data.handler import DataHandler
 from data.indicators import TechnicalIndicators
 from core.ml_engine import MLEngine
 from utils.config import Config
-import logging
-import json
+from utils.advanced_logger import get_logger
+from utils.exceptions import (
+    DataFetchException, ModelPredictionException, BotException
+)
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__, component='BacktestEngine')
 
 
 class BacktestEngine:
@@ -48,37 +51,86 @@ class BacktestEngine:
             end_date (str): End date
 
         Returns:
-            pd.DataFrame: Prepared OHLCV data with indicators
+            pd.DataFrame: Prepared OHLCV data with indicators or None
         """
-        logger.info("🔄 Preparing backtest data...")
+        try:
+            logger.info("🔄 Preparing backtest data...")
 
-        # Fetch data
-        handler = DataHandler()
-        df = handler.fetch_ohlcv(
-            symbol=symbol,
-            timeframe=timeframe,
-            start_date=start_date,
-            end_date=end_date
-        )
+            # Fetch data
+            handler = DataHandler()
+            df = handler.fetch_ohlcv(
+                symbol=symbol,
+                timeframe=timeframe,
+                start_date=start_date,
+                end_date=end_date
+            )
 
-        # Calculate indicators
-        indicators = TechnicalIndicators(df)
-        df_indicators = indicators.calculate_all()
+            if df is None or df.empty:
+                logger.error("❌ No data fetched")
+                return None
 
-        # Add ML predictions if enabled
-        if self.use_ml:
-            logger.info("🤖 Generating ML predictions...")
-            ml_engine = MLEngine()
+            # Calculate indicators
+            indicators = TechnicalIndicators(df)
+            df_indicators = indicators.calculate_all()
 
-            # Try to load existing model or train new one
-            if not ml_engine.load_model():
-                logger.warning(
-                    "⚠️  No trained model found. Training new model..."
-                )
-                ml_engine.train(df_indicators)
+            if df_indicators is None or df_indicators.empty:
+                logger.error("❌ Indicator calculation failed")
+                return None
 
-            # Get predictions with confidence
-            predictions_df = ml_engine.get_prediction_confidence(df_indicators)
+            # Add ML predictions if enabled
+            if self.use_ml:
+                try:
+                    logger.info("🤖 Generating ML predictions...")
+                    ml_engine = MLEngine()
+
+                    # Try to load existing model or train new one
+                    if not ml_engine.load_model():
+                        logger.warning(
+                            "⚠️  No trained model found. "
+                            "Training new model..."
+                        )
+                        train_result = ml_engine.train(df_indicators)
+                        if train_result is None:
+                            logger.warning(
+                                "⚠️  ML training failed, "
+                                "continuing without ML"
+                            )
+                            self.use_ml = False
+                            return df_indicators
+
+                    # Get predictions with confidence
+                    predictions_df = ml_engine.get_prediction_confidence(
+                        df_indicators
+                    )
+
+                    if predictions_df is not None and not predictions_df.empty:
+                        df_indicators['ml_prediction'] = (
+                            predictions_df['prediction']
+                        )
+                        df_indicators['ml_confidence'] = (
+                            predictions_df['confidence']
+                        )
+                        logger.info("✅ ML predictions added")
+                    else:
+                        logger.warning("⚠️  ML predictions empty")
+                        self.use_ml = False
+
+                except ModelPredictionException as e:
+                    logger.warning(f"⚠️  ML prediction failed: {e}")
+                    self.use_ml = False
+                except Exception as e:
+                    logger.warning(f"⚠️  ML error: {e}")
+                    self.use_ml = False
+
+            logger.info(f"✅ Data prepared: {len(df_indicators)} candles")
+            return df_indicators
+
+        except DataFetchException as e:
+            logger.error(f"❌ Data fetch error: {e}")
+            return None
+        except Exception as e:
+            logger.error(f"❌ Data preparation failed: {e}", exc_info=True)
+            return None
 
             df_indicators['ml_prediction'] = predictions_df['prediction']
             df_indicators['ml_confidence'] = predictions_df['confidence']
