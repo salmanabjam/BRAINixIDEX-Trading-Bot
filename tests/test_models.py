@@ -4,13 +4,18 @@ Test all AI models (LightGBM, GitHub Models, Azure)
 """
 
 import sys
+import pytest
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).parent.parent / 'src'))
+
 from ai.predictor import AIPredictor
 from ai.models_config import ModelType, AIModelsConfig
 from data.handler import DataHandler
 from data.indicators import TechnicalIndicators
 
 
-def test_model(model_type: ModelType, symbol: str = "BTCUSDT"):
+def run_model_test(model_type: ModelType, symbol: str = "BTCUSDT"):
     """Test a specific AI model"""
     model_name = AIModelsConfig.get_model_config(model_type)['name']
     
@@ -96,7 +101,7 @@ def main():
     skipped = 0
     
     for model_type, model_name in models_to_test:
-        result = test_model(model_type, symbol)
+        result = run_model_test(model_type, symbol)
         
         if result is not None:
             results.append((model_name, result))
@@ -164,6 +169,24 @@ def main():
         print("   3. Run:")
         print("      setx GITHUB_TOKEN \"ghp_your_token\"")
         print("   4. Restart terminal and run this test again")
+
+
+# Pytest parametrized test
+@pytest.mark.parametrize("model_type", [
+    ModelType.LIGHTGBM,
+    pytest.param(ModelType.GITHUB_GPT4, marks=pytest.mark.skipif(
+        not AIModelsConfig.is_api_configured(ModelType.GITHUB_GPT4),
+        reason="GitHub GPT-4 not configured"
+    )),
+    pytest.param(ModelType.AZURE_GPT4, marks=pytest.mark.skipif(
+        not AIModelsConfig.is_api_configured(ModelType.AZURE_GPT4),
+        reason="Azure GPT-4 not configured"
+    )),
+])
+def test_ai_model_prediction(model_type):
+    """Test AI model prediction functionality"""
+    result = run_model_test(model_type, "BTCUSDT")
+    assert result is not None, f"{model_type.name} prediction test failed"
 
 
 if __name__ == "__main__":

@@ -1,0 +1,800 @@
+{
+  "metadata": {
+    "symbol": "BTCUSDT",
+    "exchange": "BINANCE",
+    "base_currency": "BTC",
+    "generated_at": "2025-10-21T18:12:57.423881",
+    "timezone": "UTC"
+  },
+  "news_headlines": {
+    "total_count": 0,
+    "items": [],
+    "sources": [],
+    "sentiment_breakdown": {
+      "bullish": 0,
+      "bearish": 0,
+      "neutral": 0
+    }
+  },
+  "community_ideas": {
+    "total_count": 0,
+    "items": [],
+    "sentiment_breakdown": {
+      "bullish": 0,
+      "bearish": 0,
+      "neutral": 0
+    }
+  },
+  "conversation_status": {
+    "timestamp": "2025-10-21T18:12:57.422844",
+    "symbol": "BTCUSDT",
+    "conversation_count": 0,
+    "active_users": 0,
+    "bullish_mentions": 0,
+    "bearish_mentions": 0,
+    "sentiment_score": 0.0,
+    "raw_data": {
+      "messages": [
+        {
+          "id": "69a8482c-1c2e-46f7-a0f5-d9236fb932f0",
+          "user_id": 2318483,
+          "text": "dxy is king",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "30",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "TVC:DXY",
+          "interval": "30",
+          "time": "Tue Oct 21 14:41:36 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/2318483-hjlR_mid.png",
+          "username": "FT_Lexicon",
+          "badges": [],
+          "is_moderator": false
+        },
+        {
+          "id": "dfbb3d13-95b5-4d4f-8f1a-eb27d8b53ae0",
+          "user_id": 219442,
+          "text": "What's going on everyone?",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "1D",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "TVC:DXY",
+          "interval": "1D",
+          "time": "Tue Oct 21 14:41:24 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/219442-IL0F_mid.png",
+          "username": "neelyfx",
+          "badges": [
+            {
+              "name": "pro:pro_realtime",
+              "verbose_name": "Plus"
+            }
+          ],
+          "is_moderator": false
+        },
+        {
+          "id": "0838e452-f3b8-4908-a733-de3973da2aca",
+          "user_id": 32735805,
+          "text": "USDJPY Bullish Continuation – Smart Money Building Long Positions!",
+          "type": "",
+          "meta": {
+            "text": "Chart Snapshot",
+            "url": "https://s3.tradingview.com/snapshots/k/KyFIdaCT.png",
+            "preview_url": "https://s3.tradingview.com/snapshots/k/KyFIdaCT_thumb.png",
+            "type": "snapshot",
+            "interval": "300",
+            "links": {},
+            "version": "0.2",
+            "temp": {
+              "message_likes": {
+                "voted": false,
+                "count": 0
+              }
+            }
+          },
+          "room_id": "general",
+          "symbol": "OANDA:USDJPY",
+          "interval": "300",
+          "time": "Tue Oct 21 14:41:08 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/32735805-nNzo_mid.png",
+          "username": "The-Thief",
+          "badges": [
+            {
+              "name": "pro:pro_premium",
+              "verbose_name": "Premium"
+            }
+          ],
+          "is_moderator": false
+        },
+        {
+          "id": "c9ee645f-bff4-462f-a726-7f3bc03e327c",
+          "user_id": 3514146,
+          "text": ":D",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "15",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "FOREXCOM:XAUUSD",
+          "interval": "15",
+          "time": "Tue Oct 21 14:39:45 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/3514146-wcYm_mid.png",
+          "username": "Hazzantazzan",
+          "badges": [],
+          "is_moderator": false
+        },
+        {
+          "id": "6d8e2202-9918-4e25-8918-48b57b769cfe",
+          "user_id": 3514146,
+          "text": "sweet",
+          "type": "",
+          "meta": {
+            "text": "Chart Snapshot",
+            "url": "https://s3.tradingview.com/snapshots/w/wdzluEIQ.png",
+            "preview_url": "https://s3.tradingview.com/snapshots/w/wdzluEIQ_thumb.png",
+            "type": "snapshot",
+            "interval": "15",
+            "links": {},
+            "version": "0.2",
+            "temp": {
+              "message_likes": {
+                "voted": false,
+                "count": 0
+              }
+            }
+          },
+          "room_id": "general",
+          "symbol": "FOREXCOM:XAUUSD",
+          "interval": "15",
+          "time": "Tue Oct 21 14:39:41 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/3514146-wcYm_mid.png",
+          "username": "Hazzantazzan",
+          "badges": [],
+          "is_moderator": false
+        },
+        {
+          "id": "6cfe3d81-cc53-42e1-a000-7fa2047f14f5",
+          "user_id": 73954721,
+          "text": "gold abso nutzso",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "",
+          "interval": "",
+          "time": "Tue Oct 21 14:39:11 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/73954721-gXGD_mid.png",
+          "username": "Spankky27",
+          "badges": [
+            {
+              "name": "pro:pro_premium",
+              "verbose_name": "Premium"
+            }
+          ],
+          "is_moderator": false
+        },
+        {
+          "id": "b770b6fe-fa5d-4d8b-8174-c131be868349",
+          "user_id": 317583,
+          "text": ":sos:",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "240",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "FX:NZDUSD",
+          "interval": "240",
+          "time": "Tue Oct 21 14:37:13 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/317583_mid.png",
+          "username": "YungAlex",
+          "badges": [],
+          "is_moderator": false
+        },
+        {
+          "id": "903e1c8e-4b85-4206-9a27-3c9b63a01435",
+          "user_id": 73954721,
+          "text": "[quote=\"YungAlex\"]Not too late to enter NZDUSD\nhttps://s3.tradingview.com/snapshots/t/TeNGZ6jH.png[/quote]\nfutures only",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "",
+          "interval": "",
+          "time": "Tue Oct 21 14:36:53 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/73954721-gXGD_mid.png",
+          "username": "Spankky27",
+          "badges": [
+            {
+              "name": "pro:pro_premium",
+              "verbose_name": "Premium"
+            }
+          ],
+          "is_moderator": false
+        },
+        {
+          "id": "7748cb63-233f-4c32-aa4a-c3f1e2f10025",
+          "user_id": 317583,
+          "text": "Not too late to enter NZDUSD",
+          "type": "",
+          "meta": {
+            "text": "Chart Snapshot",
+            "url": "https://s3.tradingview.com/snapshots/t/TeNGZ6jH.png",
+            "preview_url": "https://s3.tradingview.com/snapshots/t/TeNGZ6jH_thumb.png",
+            "type": "snapshot",
+            "interval": "240",
+            "links": {},
+            "version": "0.2",
+            "temp": {
+              "message_likes": {
+                "voted": false,
+                "count": 0
+              }
+            }
+          },
+          "room_id": "general",
+          "symbol": "FX:NZDUSD",
+          "interval": "240",
+          "time": "Tue Oct 21 14:36:40 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/317583_mid.png",
+          "username": "YungAlex",
+          "badges": [],
+          "is_moderator": false
+        },
+        {
+          "id": "4ccd2df9-74db-4fc4-8aad-79545c49c793",
+          "user_id": 73954721,
+          "text": "scaled pos down on btc",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "",
+          "interval": "",
+          "time": "Tue Oct 21 14:36:22 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/73954721-gXGD_mid.png",
+          "username": "Spankky27",
+          "badges": [
+            {
+              "name": "pro:pro_premium",
+              "verbose_name": "Premium"
+            }
+          ],
+          "is_moderator": false
+        },
+        {
+          "id": "8a09d7c1-2baf-443c-a8e3-f09a9f8c4e89",
+          "user_id": 317583,
+          "text": "meanwhile EU moves 5-10 pips",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "60",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "FX:EURNZD",
+          "interval": "60",
+          "time": "Tue Oct 21 14:36:05 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/317583_mid.png",
+          "username": "YungAlex",
+          "badges": [],
+          "is_moderator": false
+        },
+        {
+          "id": "e53d40a8-3846-457e-9fac-272020135d29",
+          "user_id": 317583,
+          "text": "45+ pips in the past 30min",
+          "type": "",
+          "meta": {
+            "text": "Chart Snapshot",
+            "url": "https://s3.tradingview.com/snapshots/s/SyJSEeXK.png",
+            "preview_url": "https://s3.tradingview.com/snapshots/s/SyJSEeXK_thumb.png",
+            "type": "snapshot",
+            "interval": "60",
+            "links": {},
+            "version": "0.2",
+            "temp": {
+              "message_likes": {
+                "voted": false,
+                "count": 0
+              }
+            }
+          },
+          "room_id": "general",
+          "symbol": "FX:EURNZD",
+          "interval": "60",
+          "time": "Tue Oct 21 14:35:56 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/317583_mid.png",
+          "username": "YungAlex",
+          "badges": [],
+          "is_moderator": false
+        },
+        {
+          "id": "9ef35856-f04d-4de6-b27e-fd200893a9be",
+          "user_id": 45507823,
+          "text": ":)",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "15",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "OANDA:EURUSD",
+          "interval": "15",
+          "time": "Tue Oct 21 14:34:57 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/45507823-zTaV_mid.png",
+          "username": "BOBspatience",
+          "badges": [
+            {
+              "name": "pro:pro",
+              "verbose_name": "Essential"
+            }
+          ],
+          "is_moderator": false
+        },
+        {
+          "id": "d89658c3-b211-48ff-ad26-51cb67ae8f14",
+          "user_id": 34261895,
+          "text": "[quote=\"BOBspatience\"]what a boring move :)[/quote]\n :joy:",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "15",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "BINANCE:BTCUSDT",
+          "interval": "15",
+          "time": "Tue Oct 21 14:33:53 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/34261895-GsIx_mid.png",
+          "username": "Mirwais007",
+          "badges": [],
+          "is_moderator": false
+        },
+        {
+          "id": "0a2f5031-db0b-4112-b5e4-6acbf60b190b",
+          "user_id": 57027530,
+          "text": "Nice reaction back down. Watching the 5min closes",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "5",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "CME_MINI:NQ1!",
+          "interval": "5",
+          "time": "Tue Oct 21 14:28:12 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/57027530-eLzQ_mid.png",
+          "username": "MightyWarriorOfGod",
+          "badges": [
+            {
+              "name": "pro:pro_expert",
+              "verbose_name": "Expert"
+            }
+          ],
+          "is_moderator": false
+        },
+        {
+          "id": "c1a326cf-caec-4aac-b23e-a7f131343e38",
+          "user_id": 57027530,
+          "text": "Again",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "5",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "CME_MINI:NQ1!",
+          "interval": "5",
+          "time": "Tue Oct 21 14:27:59 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/57027530-eLzQ_mid.png",
+          "username": "MightyWarriorOfGod",
+          "badges": [
+            {
+              "name": "pro:pro_expert",
+              "verbose_name": "Expert"
+            }
+          ],
+          "is_moderator": false
+        },
+        {
+          "id": "fab7b27d-dd84-4e52-bec7-e2bd13c2ece5",
+          "user_id": 57027530,
+          "text": "shorted NQ",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "5",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "CME_MINI:NQ1!",
+          "interval": "5",
+          "time": "Tue Oct 21 14:27:54 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/57027530-eLzQ_mid.png",
+          "username": "MightyWarriorOfGod",
+          "badges": [
+            {
+              "name": "pro:pro_expert",
+              "verbose_name": "Expert"
+            }
+          ],
+          "is_moderator": false
+        },
+        {
+          "id": "bfa87efc-b606-413d-a28b-a1b1d749ea88",
+          "user_id": 45507823,
+          "text": "what a boring move :)",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "15",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "OANDA:EURUSD",
+          "interval": "15",
+          "time": "Tue Oct 21 14:27:33 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/45507823-zTaV_mid.png",
+          "username": "BOBspatience",
+          "badges": [
+            {
+              "name": "pro:pro",
+              "verbose_name": "Essential"
+            }
+          ],
+          "is_moderator": false
+        },
+        {
+          "id": "b462b5ad-9e17-403d-89ac-4cea46d0d5e3",
+          "user_id": 73954721,
+          "text": "btc chat",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "",
+          "interval": "",
+          "time": "Tue Oct 21 14:27:12 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/73954721-gXGD_mid.png",
+          "username": "Spankky27",
+          "badges": [
+            {
+              "name": "pro:pro_premium",
+              "verbose_name": "Premium"
+            }
+          ],
+          "is_moderator": false
+        },
+        {
+          "id": "c81f5ffa-34d4-4d7b-a61d-9a0ce8c769ea",
+          "user_id": 73954721,
+          "text": "Cmon btc",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "",
+          "interval": "",
+          "time": "Tue Oct 21 14:27:06 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/73954721-gXGD_mid.png",
+          "username": "Spankky27",
+          "badges": [
+            {
+              "name": "pro:pro_premium",
+              "verbose_name": "Premium"
+            }
+          ],
+          "is_moderator": false
+        },
+        {
+          "id": "29dadf33-f720-404c-983d-9c5986a1029f",
+          "user_id": 73954721,
+          "text": "Bunch of winning traders today",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "",
+          "interval": "",
+          "time": "Tue Oct 21 14:24:37 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/73954721-gXGD_mid.png",
+          "username": "Spankky27",
+          "badges": [
+            {
+              "name": "pro:pro_premium",
+              "verbose_name": "Premium"
+            }
+          ],
+          "is_moderator": false
+        },
+        {
+          "id": "1e2e800c-5270-4f42-b070-b7618eb85f00",
+          "user_id": 317583,
+          "text": "Another trade idea if anyone wants to join in on NZDUSD",
+          "type": "",
+          "meta": {
+            "text": "Chart Snapshot",
+            "url": "https://s3.tradingview.com/snapshots/r/rZAO1LLM.png",
+            "preview_url": "https://s3.tradingview.com/snapshots/r/rZAO1LLM_thumb.png",
+            "type": "snapshot",
+            "interval": "240",
+            "links": {},
+            "version": "0.2",
+            "temp": {
+              "message_likes": {
+                "voted": false,
+                "count": 0
+              }
+            }
+          },
+          "room_id": "general",
+          "symbol": "FX:NZDUSD",
+          "interval": "240",
+          "time": "Tue Oct 21 14:24:17 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/317583_mid.png",
+          "username": "YungAlex",
+          "badges": [],
+          "is_moderator": false
+        },
+        {
+          "id": "4004dd59-4ea0-4237-8978-1ae482fd2bb9",
+          "user_id": 317583,
+          "text": "@sakisf i can tell you've been in the game for a minute as well",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "240",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "FX:NZDUSD",
+          "interval": "240",
+          "time": "Tue Oct 21 14:24:05 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/317583_mid.png",
+          "username": "YungAlex",
+          "badges": [],
+          "is_moderator": false
+        },
+        {
+          "id": "345f3210-a83f-42d0-9880-99839b20e9ea",
+          "user_id": 73954721,
+          "text": "Come on ucad",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "",
+          "interval": "",
+          "time": "Tue Oct 21 14:24:02 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/73954721-gXGD_mid.png",
+          "username": "Spankky27",
+          "badges": [
+            {
+              "name": "pro:pro_premium",
+              "verbose_name": "Premium"
+            }
+          ],
+          "is_moderator": false
+        },
+        {
+          "id": "6fc01483-d158-47c1-9067-29fe5b0ffc07",
+          "user_id": 45507823,
+          "text": ":)",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "1",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "OANDA:EURUSD",
+          "interval": "1",
+          "time": "Tue Oct 21 14:23:43 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/45507823-zTaV_mid.png",
+          "username": "BOBspatience",
+          "badges": [
+            {
+              "name": "pro:pro",
+              "verbose_name": "Essential"
+            }
+          ],
+          "is_moderator": false
+        },
+        {
+          "id": "306230c3-f9e0-43c1-8d9f-8b9be3ada2ea",
+          "user_id": 45507823,
+          "text": "come on EU..",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "1",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "OANDA:EURUSD",
+          "interval": "1",
+          "time": "Tue Oct 21 14:23:40 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/45507823-zTaV_mid.png",
+          "username": "BOBspatience",
+          "badges": [
+            {
+              "name": "pro:pro",
+              "verbose_name": "Essential"
+            }
+          ],
+          "is_moderator": false
+        },
+        {
+          "id": "9df3b46a-0aed-48bf-9ead-31d10d3f8bb7",
+          "user_id": 189831,
+          "text": "when it disconnects from what it was aligning to all day, you play vs usd",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "15",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "50.14348112*FX:EURUSD^-0.576*FX:USDJPY^0.136*FX:GBPUSD^-0.119*FX:USDCAD^0.091*FX:USDSEK^0.042*FX:USDCHF^0.036",
+          "interval": "15",
+          "time": "Tue Oct 21 14:23:29 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/189831-TUTw_mid.png",
+          "username": "sakisf",
+          "badges": [
+            {
+              "name": "pro:pro_premium",
+              "verbose_name": "Premium"
+            }
+          ],
+          "is_moderator": false
+        },
+        {
+          "id": "549e21ce-d571-4e7d-931c-192483dfd06a",
+          "user_id": 189831,
+          "text": "[quote=\"YungAlex\"]oh 100% my guy. I'm started to see it all without anything on the chart which is the weirdest feeling.. Feels like a 3rd eye but it only opens up when i have pure silence around[/quote]\nafter a while it gets natural, just see what dollar aligns to (lately commodity currencies)  and go with it",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "15",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "50.14348112*FX:EURUSD^-0.576*FX:USDJPY^0.136*FX:GBPUSD^-0.119*FX:USDCAD^0.091*FX:USDSEK^0.042*FX:USDCHF^0.036",
+          "interval": "15",
+          "time": "Tue Oct 21 14:22:43 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/189831-TUTw_mid.png",
+          "username": "sakisf",
+          "badges": [
+            {
+              "name": "pro:pro_premium",
+              "verbose_name": "Premium"
+            }
+          ],
+          "is_moderator": false
+        },
+        {
+          "id": "cf9b9671-db7a-4ba6-8adc-404744abf8a9",
+          "user_id": 73954721,
+          "text": "personal mentoring me",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "",
+          "interval": "",
+          "time": "Tue Oct 21 14:22:41 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/73954721-gXGD_mid.png",
+          "username": "Spankky27",
+          "badges": [
+            {
+              "name": "pro:pro_premium",
+              "verbose_name": "Premium"
+            }
+          ],
+          "is_moderator": false
+        },
+        {
+          "id": "67641cb0-3033-40be-af7a-b7c62d57a65b",
+          "user_id": 73954721,
+          "text": "Im so thankful for ict",
+          "type": "",
+          "meta": {
+            "text": "",
+            "interval": "",
+            "links": {},
+            "version": "0.2"
+          },
+          "room_id": "general",
+          "symbol": "",
+          "interval": "",
+          "time": "Tue Oct 21 14:22:25 2025 UTC",
+          "user_pic": "https://s3.tradingview.com/userpics/73954721-gXGD_mid.png",
+          "username": "Spankky27",
+          "badges": [
+            {
+              "name": "pro:pro_premium",
+              "verbose_name": "Premium"
+            }
+          ],
+          "is_moderator": false
+        }
+      ]
+    }
+  },
+  "overall_analysis": {
+    "sentiment": "neutral",
+    "sentiment_score": 0.0,
+    "confidence": 0.0,
+    "recommendation": "HOLD - سیگنال‌های متناقض",
+    "key_factors": []
+  },
+  "statistics": {
+    "total_news": 0,
+    "total_ideas": 0,
+    "bullish_signals": 0,
+    "bearish_signals": 0,
+    "neutral_signals": 0
+  }
+}

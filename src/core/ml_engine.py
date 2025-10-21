@@ -10,7 +10,6 @@ Version: 1.0.0
 import pandas as pd
 import numpy as np
 import pickle
-import logging
 from pathlib import Path
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
@@ -21,8 +20,10 @@ import warnings
 warnings.filterwarnings('ignore')
 
 from utils.config import Config
+from utils.advanced_logger import get_logger
+from utils.exceptions import ModelTrainingException, ModelPredictionException
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__, component='MLEngine')
 
 
 class MLEngine:
@@ -66,38 +67,57 @@ class MLEngine:
 
         Returns:
             pd.DataFrame: DataFrame with engineered features
+            
+        Raises:
+            ModelTrainingException: If feature engineering fails
         """
-        logger.info("🔧 Engineering ML features...")
+        try:
+            logger.info("🔧 Engineering ML features...")
 
-        df = df.copy()
+            if df is None or df.empty:
+                raise ModelTrainingException("Empty dataframe for features")
 
-        # Price momentum features
-        df['price_change'] = df['close'].pct_change()
-        df['price_change_5'] = df['close'].pct_change(5)
-        df['price_change_10'] = df['close'].pct_change(10)
+            df = df.copy()
 
-        # Volume features
-        df['volume_change'] = df['volume'].pct_change()
-        df['volume_ma_ratio'] = df['volume'] / df['volume'].rolling(20).mean()
+            # Price momentum features
+            df['price_change'] = df['close'].pct_change()
+            df['price_change_5'] = df['close'].pct_change(5)
+            df['price_change_10'] = df['close'].pct_change(10)
 
-        # EMA crossover features
-        df['ema_diff'] = df['ema_fast'] - df['ema_slow']
-        df['ema_diff_pct'] = (
-            (df['ema_fast'] - df['ema_slow']) / df['ema_slow'] * 100
-        )
+            # Volume features
+            df['volume_change'] = df['volume'].pct_change()
+            volume_ma = df['volume'].rolling(20).mean()
+            df['volume_ma_ratio'] = df['volume'] / volume_ma.replace(0, 1)
 
-        # RSI momentum
-        df['rsi_change'] = df['rsi'].diff()
-        df['rsi_ma'] = df['rsi'].rolling(5).mean()
+            # EMA crossover features
+            df['ema_diff'] = df['ema_fast'] - df['ema_slow']
+            ema_slow_safe = df['ema_slow'].replace(0, 1)
+            df['ema_diff_pct'] = (
+                (df['ema_fast'] - df['ema_slow']) / ema_slow_safe * 100
+            )
 
-        # ATR normalized
-        df['atr_pct'] = df['atr'] / df['close'] * 100
+            # RSI momentum
+            df['rsi_change'] = df['rsi'].diff()
+            df['rsi_ma'] = df['rsi'].rolling(5).mean()
 
-        # Donchian position
-        df['donchian_position'] = (
-            (df['close'] - df['donchian_lower']) /
-            (df['donchian_upper'] - df['donchian_lower'])
-        )
+            # ATR normalized
+            close_safe = df['close'].replace(0, 1)
+            df['atr_pct'] = df['atr'] / close_safe * 100
+
+            # Donchian position
+            donchian_range = (
+                df['donchian_upper'] - df['donchian_lower']
+            ).replace(0, 1)
+            df['donchian_position'] = (
+                (df['close'] - df['donchian_lower']) / donchian_range
+            )
+
+            logger.info(f"✅ Engineered {len(df.columns)} features")
+            return df
+
+        except Exception as e:
+            logger.error(f"Feature engineering failed: {e}", exc_info=True)
+            raise ModelTrainingException(f"Feature engineering error: {e}")
 
         # Trend strength
         df['adx_change'] = df['adx'].diff()
@@ -152,7 +172,10 @@ class MLEngine:
         # Create target: future return with threshold
         # Labels: 0 = Sell/Short, 1 = Hold/Neutral, 2 = Buy/Long
         # Use percentage change to normalize across different price levels
-        df['future_return_pct'] = (df['close'].shift(-1) - df['close']) / df['close']
+        close_safe = df['close'].replace(0, 1)
+        df['future_return_pct'] = (
+            (df['close'].shift(-1) - df['close']) / close_safe
+        )
         df['target'] = 1  # Default: hold/neutral
 
         # Define threshold as 0.5% of ATR relative to price

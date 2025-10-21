@@ -58,28 +58,32 @@ class TestDataHandler:
     
     def test_validate_data_empty(self, handler):
         """Test data validation with empty DataFrame"""
+        from utils.exceptions import ValidationException
         empty_df = pd.DataFrame()
-        result = handler.validate_data(empty_df)
-        assert result is False
+        with pytest.raises(ValidationException):
+            handler.validate_data(empty_df)
     
     def test_validate_data_null_values(self, handler, sample_ohlcv_data):
         """Test data validation with null values"""
+        from utils.exceptions import ValidationException
         sample_ohlcv_data.loc[sample_ohlcv_data.index[0], 'close'] = np.nan
-        result = handler.validate_data(sample_ohlcv_data)
-        assert result is False
+        with pytest.raises(ValidationException):
+            handler.validate_data(sample_ohlcv_data)
     
     def test_validate_data_negative_prices(self, handler, sample_ohlcv_data):
         """Test data validation with negative prices"""
+        from utils.exceptions import ValidationException
         sample_ohlcv_data.loc[sample_ohlcv_data.index[0], 'close'] = -100
-        result = handler.validate_data(sample_ohlcv_data)
-        assert result is False
+        with pytest.raises(ValidationException):
+            handler.validate_data(sample_ohlcv_data)
     
     def test_validate_data_invalid_high_low(self, handler, sample_ohlcv_data):
         """Test data validation with high < low"""
+        from utils.exceptions import ValidationException
         sample_ohlcv_data.loc[sample_ohlcv_data.index[0], 'high'] = 50
         sample_ohlcv_data.loc[sample_ohlcv_data.index[0], 'low'] = 100
-        result = handler.validate_data(sample_ohlcv_data)
-        assert result is False
+        with pytest.raises(ValidationException):
+            handler.validate_data(sample_ohlcv_data)
     
     @patch('data.handler.Client')
     def test_fetch_latest_price(self, mock_client):
